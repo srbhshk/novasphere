@@ -4,3 +4,7 @@ dist
 .env.local
 *.tsbuildinfo
 .turbo
+# Add to .gitignore
+playwright-report/
+test-results/
+*.html        # if the saas-template.html prototype is in root
