@@ -96,6 +96,7 @@ export default function DemoScriptOverlay({
   if (!isDemo) return null;
 
   const current = DEMO_SCRIPT[index] ?? DEMO_SCRIPT[0];
+  if (!current) return null;
 
   const goPrev = React.useCallback(() => {
     setIndex((prev) => (prev > 0 ? prev - 1 : prev));
@@ -106,9 +107,10 @@ export default function DemoScriptOverlay({
   }, []);
 
   const trigger = React.useCallback(() => {
+    if (!current) return;
     if (!onTriggerScenario || !current.autoTrigger) return;
     void onTriggerScenario(current.autoTrigger);
-  }, [current.autoTrigger, onTriggerScenario]);
+  }, [current, onTriggerScenario]);
 
   React.useEffect(() => {
     const handleKey = (event: KeyboardEvent) => {

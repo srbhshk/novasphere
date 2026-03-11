@@ -1,9 +1,0 @@
-{
-  "extends": ["plugin:@typescript-eslint/recommended-strict"],
-  "rules": {
-    "no-console": "error",
-    "@typescript-eslint/no-explicit-any": "error",
-    "consistent-return": "error"
-  },
-  "ignorePatterns": ["dist/", "node_modules/"]
-}

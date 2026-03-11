@@ -209,7 +209,7 @@ What would you like to investigate first?`,
 
   React.useEffect(() => {
     const timeIntent = getTimeIntent();
-    if (!timeIntent) return;
+    if (!timeIntent) return undefined;
 
     const timeoutId = window.setTimeout(() => {
       setLayout(getLayout(timeIntent));
@@ -228,8 +228,7 @@ What would you like to investigate first?`,
     }, 1500);
 
     return () => window.clearTimeout(timeoutId);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [addAgentMessage, setLayout]);
 
   React.useEffect(() => {
     const handler = (event: KeyboardEvent) => {

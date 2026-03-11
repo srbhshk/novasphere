@@ -101,21 +101,6 @@ export default function CopilotPanel({
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
-  useImperativeHandle(
-    copilotRef,
-    () => ({
-      openAndSetInput(text: string) {
-        setInput(text);
-        setOpen(true);
-        setTimeout(() => inputRef.current?.focus(), 100);
-      },
-      sendCurrentInput() {
-        void handleSend();
-      },
-    }),
-    [handleSend]
-  );
-
   const {
     messages,
     status,
@@ -256,6 +241,21 @@ export default function CopilotPanel({
       inputRef.current?.focus();
     },
     []
+  );
+
+  useImperativeHandle(
+    copilotRef,
+    () => ({
+      openAndSetInput(text: string) {
+        setInput(text);
+        setOpen(true);
+        setTimeout(() => inputRef.current?.focus(), 100);
+      },
+      sendCurrentInput() {
+        void handleSend();
+      },
+    }),
+    [handleSend]
   );
 
   const showTyping =

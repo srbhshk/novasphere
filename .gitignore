@@ -1,7 +1,8 @@
-node_modules
-.next
-dist
+node_modules/
+.next/
+dist/
 .env.local
+.env.*.local
 *.tsbuildinfo
 .turbo
 # Add to .gitignore

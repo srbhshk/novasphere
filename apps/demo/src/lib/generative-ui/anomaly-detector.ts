@@ -56,6 +56,14 @@ type MetricSample = {
   value: number;
 };
 
+function getScenarioOrThrow(index: number, context: string): AnomalyScenario {
+  const scenario = ANOMALY_SCENARIOS[index];
+  if (!scenario) {
+    throw new Error(`Missing anomaly scenario at index ${index} (${context})`);
+  }
+  return scenario;
+}
+
 function extractMetrics(json: unknown): MetricSample[] {
   if (
     typeof json !== "object" ||
@@ -96,15 +104,15 @@ function extractMetrics(json: unknown): MetricSample[] {
 
 function pickScenarioForMetric(metricId: string): AnomalyScenario {
   if (metricId.toLowerCase().includes("revenue")) {
-    return ANOMALY_SCENARIOS[0];
+    return getScenarioOrThrow(0, "revenue metric");
   }
   if (
     metricId.toLowerCase().includes("latency") ||
     metricId.toLowerCase().includes("infra")
   ) {
-    return ANOMALY_SCENARIOS[1];
+    return getScenarioOrThrow(1, "latency/infra metric");
   }
-  return ANOMALY_SCENARIOS[2];
+  return getScenarioOrThrow(2, "user metric");
 }
 
 /**
@@ -119,8 +127,8 @@ export function useAnomalyDetector(
 
   // Demo mode: scripted timers.
   React.useEffect(() => {
-    if (!isDemoMode) return;
-    if (typeof window === "undefined") return;
+    if (!isDemoMode) return undefined;
+    if (typeof window === "undefined") return undefined;
 
     const timeouts = ANOMALY_SCENARIOS.map((scenario) =>
       window.setTimeout(() => {
@@ -137,12 +145,12 @@ export function useAnomalyDetector(
   const baselineRef = React.useRef<MetricSample[] | null>(null);
 
   React.useEffect(() => {
-    if (isDemoMode) return;
-    if (typeof window === "undefined") return;
+    if (isDemoMode) return undefined;
+    if (typeof window === "undefined") return undefined;
 
     let cancelled = false;
 
-    const poll = async () => {
+    const poll = async (): Promise<void> => {
       try {
         const res = await fetch("/api/metrics", { method: "GET" });
         if (!res.ok) return;
@@ -173,7 +181,9 @@ export function useAnomalyDetector(
     };
 
     const intervalId = window.setInterval(() => {
-      if (!cancelled) void poll();
+      if (!cancelled) {
+        void poll();
+      }
     }, 30_000);
 
     // Initial poll.

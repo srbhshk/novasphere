@@ -41,7 +41,6 @@ export function getTimeIntent(): Intent | null {
 
 export function getTimeGreeting(): string {
   const ctx = getTimeContext();
-  const hour = new Date().getHours();
   if (ctx === "morning") {
     const weekday = new Date().toLocaleDateString("en", { weekday: "long" });
     return `Good morning! Here's your ${weekday} briefing.`;

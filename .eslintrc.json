@@ -3,10 +3,22 @@
     "plugin:@typescript-eslint/recommended",
     "plugin:@typescript-eslint/strict"
   ],
+  "plugins": ["react-hooks"],
   "rules": {
     "no-console": "error",
     "@typescript-eslint/no-explicit-any": "error",
-    "consistent-return": "error"
+    "consistent-return": "error",
+    "react-hooks/exhaustive-deps": "error"
   },
-  "ignorePatterns": ["dist/", ".next/", "node_modules/"]
+  "ignorePatterns": ["dist/", ".next/", "node_modules/"],
+  "overrides": [
+    {
+      "files": ["packages/**/*.{ts,tsx}"],
+      "rules": {
+        "no-console": "error",
+        "@typescript-eslint/no-explicit-any": "error",
+        "consistent-return": "error"
+      }
+    }
+  ]
 }

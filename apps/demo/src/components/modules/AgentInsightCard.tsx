@@ -20,7 +20,7 @@ function useTypewriter(text: string, speedMs: number = 18): string {
   React.useEffect(() => {
     if (!text) {
       setDisplayed("");
-      return;
+      return undefined;
     }
     let index = 0;
     setDisplayed("");
@@ -59,10 +59,6 @@ export default function AgentInsightCard({
   const typed = useTypewriter(lastAssistant?.content ?? "");
   const showSkeleton = !lastAssistant;
 
-  const handleSuggestionSelect = (): void => {
-    // Selection is handled inside the CopilotPanel flow; this module is display-only.
-  };
-
   if (showSkeleton) {
     return (
       <div className="flex h-full flex-col rounded-xl border border-ns-border/60 bg-ns-surface/40 px-4 py-3">
@@ -97,7 +93,7 @@ export default function AgentInsightCard({
         {typed || insightText}
       </p>
       <div className="mt-3">
-        <SuggestionChips chips={SUGGESTION_CHIPS} onSelect={handleSuggestionSelect} />
+        <SuggestionChips chips={SUGGESTION_CHIPS} onSelect={() => {}} />
       </div>
     </div>
   );
