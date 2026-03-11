@@ -1,0 +1,41 @@
+{
+  "name": "@novasphere/tokens",
+  "version": "0.0.1",
+  "description": "Design token foundation. CSS custom properties and a Tailwind CSS preset. Zero JavaScript. Zero React. Zero dependencies.",
+  "license": "MIT",
+  "author": "novasphere contributors",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-org/novasphere",
+    "directory": "packages/tokens"
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./tokens.css": "./dist/tokens.css"
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src --max-warnings 0",
+    "test": "vitest run --passWithNoTests",
+    "test:watch": "vitest",
+    "storybook": "storybook dev -p 6001",
+    "storybook:build": "storybook build"
+  },
+  "peerDependencies": {},
+  "dependencies": {},
+  "devDependencies": {
+    "tsup": "^8.0.0",
+    "typescript": "~5.6.0",
+    "vitest": "^2.1.8"
+  }
+}

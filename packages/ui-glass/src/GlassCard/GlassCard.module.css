@@ -1,0 +1,46 @@
+/* SPDX-License-Identifier: MIT */
+/* @novasphere/ui-glass — GlassCard glass styles */
+
+.glassCard {
+  position: relative;
+  border: 1px solid var(--ns-color-border);
+  border-radius: var(--ns-radius-lg);
+  overflow: hidden;
+}
+
+.glassCard.subtle {
+  background: var(--ns-glass-bg-subtle);
+  backdrop-filter: blur(var(--ns-blur-sm));
+}
+
+.glassCard.medium {
+  background: var(--ns-glass-bg-medium);
+  backdrop-filter: blur(var(--ns-blur-md));
+}
+
+.glassCard.strong {
+  background: var(--ns-glass-bg-strong);
+  backdrop-filter: blur(var(--ns-blur-lg));
+}
+
+.glassCard.hoverable {
+  transition: transform var(--ns-duration-base) var(--ns-ease-smooth);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .glassCard.hoverable:hover {
+    transform: translateY(-2px);
+  }
+}
+
+.glassCard.highlight::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    transparent 50%
+  );
+  pointer-events: none;
+}

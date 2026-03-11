@@ -1,0 +1,53 @@
+/* SPDX-License-Identifier: MIT */
+/* @novasphere/ui-shell — Topbar layout */
+
+.topbarRoot {
+  width: 100%;
+}
+
+.topbarPanel {
+  width: 100%;
+  border-radius: 0;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 1.25rem;
+  min-height: 3.5rem;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.tenantName {
+  font-weight: 600;
+  font-size: 0.9375rem;
+  color: var(--ns-color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.separator {
+  width: 1px;
+  height: 1.25rem;
+  background: var(--ns-color-border);
+  flex-shrink: 0;
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}

@@ -1,0 +1,38 @@
+{
+  "name": "@novasphere/tenant-core",
+  "version": "0.0.1",
+  "description": "The multi-tenancy system. Framework-agnostic TypeScript — no React, no CSS. Contains TenantConfig types, the static tenant registry, and tenant resolution utilities.",
+  "license": "MIT",
+  "author": "novasphere contributors",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-org/novasphere",
+    "directory": "packages/tenant-core"
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src --max-warnings 0",
+    "test": "vitest run --passWithNoTests",
+    "test:watch": "vitest"
+  },
+  "peerDependencies": {},
+  "dependencies": {},
+  "devDependencies": {
+    "tsup": "^8.0.0",
+    "typescript": "~5.6.0",
+    "vitest": "^2.1.8"
+  }
+}

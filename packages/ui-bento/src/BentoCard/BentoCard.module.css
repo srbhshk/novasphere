@@ -1,0 +1,19 @@
+/* SPDX-License-Identifier: MIT */
+/* @novasphere/ui-bento — BentoCard drag and grid placement */
+
+.bentoCard {
+  min-height: 0;
+  height: 100%;
+}
+
+.bentoCard.dragging {
+  cursor: grabbing;
+  transform: scale(1.02);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .bentoCard.dragging {
+    transition: box-shadow 0.15s ease, transform 0.15s ease;
+  }
+}

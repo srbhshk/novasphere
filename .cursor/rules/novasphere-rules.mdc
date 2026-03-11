@@ -1,0 +1,1498 @@
+---
+alwaysApply: true
+---
+
+# =============================================================================
+# NOVASPHERE — CURSOR RULES
+# =============================================================================
+# Project   : novasphere
+# Version   : 0.3.0
+# License   : MIT
+# Description: An open-source, AI-native SaaS dashboard template featuring
+#              Liquid Glass aesthetics, Generative UI, Bento Grid layouts,
+#              and a pluggable agent copilot. Structured as a pnpm workspace
+#              monorepo with independently publishable packages. Each package
+#              is usable standalone — install only what you need.
+#              AI-independent by default: runs fully offline via Ollama
+#              (Qwen2.5 0.5B). External providers (Claude, OpenAI) are
+#              opt-in via env keys. No API key required to run or demo.
+# Repo      : https://github.com/your-org/novasphere
+# =============================================================================
+#
+# PURPOSE OF THIS FILE
+# --------------------
+# This file is the single source of truth for Cursor AI when working on
+# novasphere. It defines the architecture, conventions, constraints, and
+# patterns that MUST be followed at all times.
+#
+# Cursor must NEVER:
+#   - Invent patterns not described here
+#   - Add dependencies not listed in the approved stack
+#   - Make assumptions about business logic — ask instead
+#   - Skip TypeScript types or use `any`
+#   - Generate placeholder/lorem content in production code paths
+#   - Combine concerns that this file separates (e.g. data fetching in UI)
+#   - Import across package boundaries that are forbidden (see Section 3)
+#   - Create files outside the structure defined in Section 4
+#
+# When in doubt: STOP and ask the developer. Do not guess.
+# =============================================================================
+
+
+# =============================================================================
+# 1. PROJECT IDENTITY
+# =============================================================================
+
+project:
+  name: novasphere
+  type: pnpm workspace monorepo — open-source template + independently
+        publishable UI packages
+  license: MIT
+  npm_scope: "@novasphere"
+
+  description: >
+    An open-source, AI-native SaaS dashboard template featuring Liquid Glass
+    aesthetics, Generative UI that adapts in real-time, immersive Bento Grid
+    layouts, and a pluggable agent copilot (Copilot Panel). Structured as a
+    pnpm workspace monorepo with independently publishable packages under the
+    @novasphere npm scope. The demo app proves everything works together.
+    Each package is usable in isolation — teams pick only what they need.
+    Runs fully offline by default using Ollama + Qwen2.5 0.5B. No API key,
+    no internet connection required to run, develop, or demo.
+
+  north_star: >
+    Demo-first. Must impress in 5 seconds. Must be forkable and runnable in
+    under 10 minutes. Individual packages must be installable into an existing
+    app in under 30 minutes. Internals may be complex — developer experience
+    must never be.
+
+  non_goals:
+    - Not a full application — it is a template and composable package library
+    - Not a full Micro Frontend (no separate deployments, no module federation)
+    - Not a design system replacing shadcn/ui — it extends it
+    - Not a backend — server logic lives only in Next.js API routes in apps/demo
+    - Not coupled to any AI provider
+    - Not a model training or fine-tuning framework
+    - Not a monolith — shared logic must live in packages, not duplicated in apps
+
+
+# =============================================================================
+# 2. MONOREPO ARCHITECTURE
+# =============================================================================
+# This is the most important section. Read it fully before writing any code.
+# The monorepo structure, package registry, and boundary rules are FIXED.
+# Cursor must not create new packages without explicit developer approval.
+# =============================================================================
+
+monorepo:
+  tool: pnpm workspaces
+  root_config: pnpm-workspace.yaml
+  node_version: ">=20.0.0"
+  package_manager: pnpm
+
+  workspace_pattern: |
+    packages:
+      - "apps/*"
+      - "packages/*"
+
+  # ── PACKAGE REGISTRY ────────────────────────────────────────────────────────
+  # Every package in the monorepo is listed here with its full identity.
+  # Cursor must use these EXACT names in import statements and package.json.
+  # ─────────────────────────────────────────────────────────────────────────────
+
+  packages:
+
+    # ── APPS ──────────────────────────────────────────────────────────────────
+
+    "apps/demo":
+      npm_name: null                    # Not published to npm — demo only
+      description: >
+        The full novasphere demo application. A Next.js 14 App Router app
+        that imports and composes all packages. This is what you deploy to
+        Vercel to demo. It is NOT a template to fork — it is proof that all
+        packages work together. Teams fork individual packages, not this app.
+      depends_on:
+        - "@novasphere/tokens"
+        - "@novasphere/ui-glass"
+        - "@novasphere/ui-bento"
+        - "@novasphere/ui-shell"
+        - "@novasphere/ui-charts"
+        - "@novasphere/ui-agent"
+        - "@novasphere/ui-auth"
+        - "@novasphere/agent-core"
+        - "@novasphere/tenant-core"
+      framework: Next.js 14 (App Router)
+      deploys_to: Vercel
+
+    # ── FOUNDATION PACKAGES (no UI, no React) ─────────────────────────────────
+
+    "@novasphere/tokens":
+      path: packages/tokens
+      description: >
+        Design token foundation. CSS custom properties and a Tailwind CSS
+        preset. Zero JavaScript. Zero React. Zero dependencies.
+        Every other package that needs design tokens imports ONLY this package.
+        This is the single source of truth for all visual constants.
+      exports:
+        - tailwind.preset.ts     # Tailwind preset — import in tailwind.config.ts
+        - tokens.css             # CSS custom properties — import in globals.css
+        - index.ts               # Re-exports token constants as typed TS values
+      depends_on: []             # ZERO dependencies — this is the foundation
+      peer_deps: []
+      publishes_to_npm: true
+
+    "@novasphere/agent-core":
+      path: packages/agent-core
+      description: >
+        The AI adapter system. Framework-agnostic TypeScript — no React, no CSS,
+        no UI. Contains the AgentAdapter interface, adapter factory, all concrete
+        adapter implementations (Ollama, WebLLM, Claude, OpenAI, Mock), prompt
+        templates, and AgentContext types. Any framework can use this package.
+      exports:
+        - adapter.interface.ts
+        - adapter.factory.ts
+        - context.types.ts
+        - prompts.ts
+        - adapters/ollama.adapter.ts
+        - adapters/webllm.adapter.ts
+        - adapters/claude.adapter.ts
+        - adapters/openai.adapter.ts
+        - adapters/mock.adapter.ts
+      depends_on: []             # ZERO UI dependencies
+      peer_deps:
+        - "@mlc-ai/web-llm"      # optional — only if webllm adapter used
+        - "@anthropic-ai/sdk"    # optional — only if claude adapter used
+        - "openai"               # optional — only if openai adapter used
+      publishes_to_npm: true
+
+    "@novasphere/tenant-core":
+      path: packages/tenant-core
+      description: >
+        The multi-tenancy system. Framework-agnostic TypeScript — no React,
+        no CSS. Contains TenantConfig types, the static tenant registry,
+        and tenant resolution utilities. Used by Next.js middleware in apps/demo
+        and importable into any framework's server layer.
+      exports:
+        - tenant.types.ts
+        - tenant.registry.ts
+        - tenant.resolver.ts
+      depends_on: []             # ZERO dependencies
+      peer_deps: []
+      publishes_to_npm: true
+
+    # ── UI PACKAGES (React components) ────────────────────────────────────────
+
+    "@novasphere/ui-glass":
+      path: packages/ui-glass
+      description: >
+        Liquid Glass component system. The core visual aesthetic of novasphere.
+        Contains GlassCard, GlassPanel, GlassModal, the ambient background
+        layer, and the grain overlay. This is the most foundational UI package
+        — all other UI packages depend on it for visual consistency.
+        Self-contained: install this alone to get the Liquid Glass aesthetic
+        in any React app.
+      exports:
+        - GlassCard
+        - GlassPanel
+        - GlassModal
+        - AmbientBackground
+        - GrainOverlay
+      depends_on:
+        - "@novasphere/tokens"
+      peer_deps:
+        - react
+        - react-dom
+      publishes_to_npm: true
+
+    "@novasphere/ui-bento":
+      path: packages/ui-bento
+      description: >
+        Bento Grid layout system. Contains BentoGrid, BentoCard, and the
+        data-driven layout engine. The grid reads a BentoLayoutConfig[] array
+        and renders cards accordingly. Includes drag-to-reorder via Framer
+        Motion. This is the Generative UI mechanism — the AI agent restructures
+        the dashboard by emitting a new layout config array.
+      exports:
+        - BentoGrid
+        - BentoCard
+        - BentoSpan
+        - bento.types.ts         # BentoLayoutConfig, BentoCardConfig types
+      depends_on:
+        - "@novasphere/tokens"
+        - "@novasphere/ui-glass"
+      peer_deps:
+        - react
+        - react-dom
+        - framer-motion
+      publishes_to_npm: true
+
+    "@novasphere/ui-charts":
+      path: packages/ui-charts
+      description: >
+        Chart component wrappers. Glass-styled Recharts components: SparklineChart,
+        DonutChart, AreaChart, HeatmapChart. Each accepts typed data props and
+        handles loading/empty/error states internally. Responsive by default.
+      exports:
+        - SparklineChart
+        - DonutChart
+        - AreaChart
+        - HeatmapChart
+        - chart.types.ts         # Typed data shapes for each chart
+      depends_on:
+        - "@novasphere/tokens"
+        - "@novasphere/ui-glass"
+      peer_deps:
+        - react
+        - react-dom
+        - recharts
+      publishes_to_npm: true
+
+    "@novasphere/ui-agent":
+      path: packages/ui-agent
+      description: >
+        Copilot Panel UI. The visual layer of the agent system. Contains
+        CopilotPanel, AgentMessage, SuggestionChips, TypingIndicator,
+        AdapterStatusBadge, and AdapterInfoPopover. This package knows
+        NOTHING about which AI is running — it communicates only through
+        the AgentAdapter interface from @novasphere/agent-core.
+        Install this with agent-core to get a fully working AI copilot.
+      exports:
+        - CopilotPanel
+        - AgentMessage
+        - SuggestionChips
+        - TypingIndicator
+        - AdapterStatusBadge
+        - AdapterInfoPopover
+      depends_on:
+        - "@novasphere/tokens"
+        - "@novasphere/ui-glass"
+        - "@novasphere/agent-core"
+      peer_deps:
+        - react
+        - react-dom
+        - framer-motion
+        - zustand
+      publishes_to_npm: true
+
+    "@novasphere/ui-auth":
+      path: packages/ui-auth
+      description: >
+        Authentication UI components. Provider-agnostic — the UI is decoupled
+        from the auth implementation. Contains LoginForm, SignupForm,
+        ForgotPasswordForm, UserMenu, AuthGuard, and TenantSwitcher.
+        The actual auth provider (Clerk, NextAuth, Supabase Auth, etc.)
+        is injected via an AuthAdapter interface defined in this package.
+        Teams wire their own auth behind the interface — the UI never changes.
+      exports:
+        - LoginForm
+        - SignupForm
+        - ForgotPasswordForm
+        - UserMenu
+        - AuthGuard
+        - TenantSwitcher
+        - auth.adapter.interface.ts   # The contract auth providers must implement
+        - auth.types.ts
+      depends_on:
+        - "@novasphere/tokens"
+        - "@novasphere/ui-glass"
+        - "@novasphere/tenant-core"
+      peer_deps:
+        - react
+        - react-dom
+        - react-hook-form
+        - zod
+      publishes_to_npm: true
+
+    "@novasphere/ui-shell":
+      path: packages/ui-shell
+      description: >
+        Application shell components. The structural frame of the dashboard:
+        Sidebar, Topbar, AppShell, NavItem, and BreadcrumbBar.
+        Tenant-aware — reads from TenantConfig to render tenant name, logo,
+        and navigation items. This is the outermost UI layer — it wraps all
+        other packages.
+      exports:
+        - AppShell
+        - Sidebar
+        - Topbar
+        - NavItem
+        - BreadcrumbBar
+      depends_on:
+        - "@novasphere/tokens"
+        - "@novasphere/ui-glass"
+        - "@novasphere/tenant-core"
+        - "@novasphere/ui-auth"
+      peer_deps:
+        - react
+        - react-dom
+        - framer-motion
+        - zustand
+      publishes_to_npm: true
+
+
+  # ── PACKAGE BOUNDARY RULES ───────────────────────────────────────────────────
+  # These are HARD RULES. Cursor must check these before every import.
+  # A boundary violation is a blocking error — fix it before moving on.
+  # ─────────────────────────────────────────────────────────────────────────────
+
+  boundary_rules:
+
+    foundation_law: >
+      The dependency graph must be a strict DAG (Directed Acyclic Graph).
+      No circular dependencies between packages — ever.
+      The allowed dependency directions are:
+        apps/* → any package
+        ui-shell → ui-glass, ui-auth, tenant-core, tokens
+        ui-auth → ui-glass, tenant-core, tokens
+        ui-agent → ui-glass, agent-core, tokens
+        ui-bento → ui-glass, tokens
+        ui-charts → ui-glass, tokens
+        ui-glass → tokens
+        agent-core → nothing (no UI packages)
+        tenant-core → nothing (no UI packages)
+        tokens → nothing
+
+    explicit_violations:
+      # Cursor must REFUSE to write these imports. They are always wrong.
+      - "agent-core must NEVER import from any ui-* package"
+      - "tenant-core must NEVER import from any ui-* package"
+      - "tokens must NEVER import from any other package"
+      - "ui-glass must NEVER import from ui-bento, ui-agent, ui-auth, ui-shell, ui-charts"
+      - "ui-bento must NEVER import from ui-agent, ui-auth, ui-shell"
+      - "ui-charts must NEVER import from ui-agent, ui-auth, ui-shell, ui-bento"
+      - "ui-auth must NEVER import from ui-agent, ui-shell, ui-bento, ui-charts"
+      - "ui-agent must NEVER import from ui-auth, ui-shell, ui-bento, ui-charts"
+      - "apps/demo must NEVER contain logic that belongs in a package"
+      - "No package may import directly from apps/demo"
+
+    cross_package_import_format: >
+      When one package imports from another, always import from the package
+      name, never from a relative path that crosses the package boundary.
+
+      CORRECT:   import { GlassCard } from '@novasphere/ui-glass'
+      INCORRECT: import { GlassCard } from '../../ui-glass/src/GlassCard'
+
+    internal_import_format: >
+      Within a package, always use relative imports.
+
+      CORRECT:   import { tokens } from '../tokens'
+      INCORRECT: import { tokens } from '@novasphere/ui-glass/tokens'
+                 (this is self-referential and wrong)
+
+
+# =============================================================================
+# 3. APPROVED TECH STACK
+# =============================================================================
+# Cursor must NEVER introduce a library outside this list without explicit
+# developer approval. If a task requires something not listed here, STOP
+# and ask before proceeding.
+# =============================================================================
+
+stack:
+  framework:
+    name: Next.js 14
+    scope: apps/demo only
+    router: App Router (NOT Pages Router — never use pages/)
+    rendering: >
+      Prefer React Server Components (RSC) by default.
+      Use `"use client"` only when the component requires:
+        - useState / useReducer / useEffect
+        - Browser APIs (window, document, navigator)
+        - Event handlers
+        - Framer Motion animations
+        - Zustand store access
+      Never add `"use client"` to layout.tsx or page.tsx unless absolutely
+      required. Push client boundaries as deep into the tree as possible.
+      Packages do NOT use Next.js — they are framework-agnostic React.
+
+  language:
+    name: TypeScript
+    version: "5.x"
+    mode: strict
+    tsconfig_strategy: >
+      Root tsconfig.json defines base settings.
+      Each package and app extends it via tsconfig.json with
+      "extends": "../../tsconfig.base.json".
+      Path aliases are defined per-package — never globally across packages.
+    rules:
+      - NO `any` — ever. Use `unknown` and narrow it.
+      - NO `as` type assertions without a comment explaining why it is safe.
+      - NO implicit return types on exported functions — always annotate.
+      - Prefer `type` over `interface` for object shapes unless extending.
+      - Use `interface` only when a class implements it.
+      - Enums are forbidden — use `as const` objects instead.
+      - All props must be typed via a named `type` exported from the same file.
+      - Each package's public API is defined in its index.ts — only what is
+        exported from index.ts is considered the public API.
+
+  styling:
+    primary: Tailwind CSS v3
+    modules: CSS Modules (for glass effects, keyframes, ambient layers)
+    tailwind_strategy: >
+      @novasphere/tokens exports a Tailwind preset (tailwind.preset.ts).
+      Each package and app that uses Tailwind imports this preset in its
+      own tailwind.config.ts. This ensures design token consistency across
+      all packages without duplicating token definitions.
+    rules:
+      - Design tokens live ONLY in packages/tokens. Never defined elsewhere.
+      - Liquid Glass effects (backdrop-filter, gradients, grain) live in CSS
+        Modules co-located with their component. File: ComponentName.module.css
+      - Never use inline style={{}} for values expressible as CSS vars or Tailwind.
+      - Never use styled-components, Emotion, or any CSS-in-JS runtime library.
+      - Tailwind classes never built by string concatenation — use cn() always.
+      - Dark mode is the default. No light-mode-only colour values.
+
+  components:
+    base: shadcn/ui (Radix UI primitives)
+    shadcn_strategy: >
+      shadcn/ui components are installed into packages/ui-glass/src/ui/
+      (not apps/demo). This means the base components are part of the
+      published package, not the app. Any package that needs a shadcn
+      primitive wraps the one in ui-glass — it never re-installs shadcn.
+    rules:
+      - shadcn source files in src/ui/ are NEVER modified. Extend by wrapping.
+      - Component files export exactly ONE primary component as default export.
+      - Props types are named [ComponentName]Props and exported from index.ts.
+      - Never build a custom component for something shadcn/ui already provides.
+      - Every custom component has a Storybook story in its own package.
+
+  state:
+    library: Zustand
+    version: "4.x"
+    scope_rules: >
+      Zustand stores are NOT inside packages — they live in apps/demo/src/store/.
+      Packages are stateless — they receive state via props or context.
+      Exception: ui-agent may use a local Zustand store for conversation
+      history scoped to the CopilotPanel — but it must be exported as a
+      hook (useAgentStore) so the consuming app can access it if needed.
+    stores:
+      "apps/demo/src/store/layout.store.ts":
+        purpose: Bento grid layout config (BentoLayoutConfig[] array)
+      "apps/demo/src/store/agent.store.ts":
+        purpose: Copilot conversation, agent status, download progress
+      "apps/demo/src/store/tenant.store.ts":
+        purpose: Current tenant config, feature flags, theme overrides
+    rules:
+      - One store file per domain slice.
+      - Stores export a typed hook: use[Domain]Store.
+      - Never put derived values in the store — use selectors.
+      - Server state (API data) is NEVER in Zustand — use TanStack Query.
+
+  data_fetching:
+    library: TanStack Query (React Query)
+    version: "5.x"
+    scope: apps/demo/src/hooks/ only
+    rules:
+      - All server data fetching goes through TanStack Query hooks.
+      - Hooks named use[Resource][Action].ts (e.g. useMetricsList.ts).
+      - Every hook handles loading, error, and empty states explicitly.
+      - Never fetch data directly in a component body.
+      - API routes live in apps/demo/src/app/api/.
+      - Mock responses live in apps/demo/src/mocks/.
+      - Mock/real switch controlled by NEXT_PUBLIC_DATA_SOURCE env var.
+      - Packages never use TanStack Query — they are data-agnostic.
+        Data is passed into package components via props.
+
+  charts:
+    library: Recharts
+    version: "2.x"
+    scope: "@novasphere/ui-charts package"
+    rules:
+      - Recharts is a dependency of ui-charts only — not the demo app directly.
+      - All chart components wrapped in typed components in ui-charts.
+      - Charts accept typed data props — never raw API shapes.
+      - Charts use ResponsiveContainer by default.
+      - Chart colours reference @novasphere/tokens, never hardcoded hex.
+      - Every chart has a loading skeleton variant.
+
+  animation:
+    library: Framer Motion
+    version: "11.x"
+    scope: ui-bento, ui-agent, ui-shell (peer dependency in each)
+    rules:
+      - Framer Motion used ONLY for:
+          - Bento card drag-to-reorder (ui-bento)
+          - CopilotPanel slide-in/out (ui-agent)
+          - Page transitions (apps/demo)
+          - Component enter/exit (ui-shell)
+      - CSS animations (keyframes in CSS Modules) used for:
+          - Ambient background shifts (ui-glass)
+          - Pulse indicators (ui-glass)
+          - Skeleton shimmer (ui-glass)
+          - Typing indicator bounces (ui-agent)
+      - All Framer Motion variants defined as constants in a variants.ts
+        file within each package — never inline in JSX.
+      - Never use Framer Motion where a CSS animation suffices.
+
+  ai_adapter:
+    pattern: Adapter Pattern (interface + concrete implementations)
+    scope: "@novasphere/agent-core package exclusively"
+    interface_file: packages/agent-core/src/adapter.interface.ts
+    factory_file: packages/agent-core/src/adapter.factory.ts
+
+    resolution_order: |
+      The factory resolves the active adapter in this EXACT priority order.
+      It evaluates top-to-bottom and uses the first successful match.
+
+        1. OllamaAdapter   — DEFAULT. Health ping to OLLAMA_BASE_URL on init.
+                             Model: qwen2.5:0.5b (Q4, ~400MB, CPU-capable).
+                             Works offline, zero config, fastest responses.
+
+        2. WebLLMAdapter   — BROWSER FALLBACK. Used when Ollama unreachable
+                             AND NEXT_PUBLIC_AI_ADAPTER is 'auto' or unset.
+                             Model: Phi-3-mini-4k-instruct-q4f16_1-MLC.
+                             Requires WebGPU (Chrome 113+). ~2GB IndexedDB cache.
+                             If navigator.gpu undefined → fall to MockAdapter.
+
+        3. ClaudeAdapter   — EXTERNAL OPT-IN. Activated by ANTHROPIC_API_KEY.
+                             Server-side only. Never exposes key to client.
+                             Streams via apps/demo/src/app/api/agent/route.ts.
+
+        4. OpenAIAdapter   — EXTERNAL OPT-IN. Activated by OPENAI_API_KEY
+                             when ANTHROPIC_API_KEY is absent.
+                             Same server-side-only pattern as Claude.
+
+        5. MockAdapter     — FALLBACK / CI / TESTING. Always works.
+                             Reads from apps/demo/src/mocks/agent-responses.mock.ts
+                             with configurable artificial delay. No network calls.
+
+    local_llm:
+      primary:
+        runtime: Ollama
+        model: qwen2.5:0.5b
+        rationale: >
+          Qwen2.5 0.5B is optimal for novasphere's agent task profile:
+          structured reasoning, JSON output, intent classification, and
+          short summarisation. These are instruction-following tasks, not
+          creative generation — a 0.5B model is sufficient. ~400MB Q4
+          quantized. Runs on CPU. 50–200ms response latency.
+        alternatives:
+          - qwen2.5:1.5b     # better reasoning, 3× larger
+          - phi3:mini        # Microsoft alternative, similar size
+          - llama3.2:1b      # Meta alternative
+        api: OpenAI-compatible REST at OLLAMA_BASE_URL/v1
+        health_endpoint: GET OLLAMA_BASE_URL/api/tags
+        timeout_ms: 2000
+
+      browser_fallback:
+        runtime: WebLLM
+        package: "@mlc-ai/web-llm"
+        model: Phi-3-mini-4k-instruct-q4f16_1-MLC
+        import_strategy: >
+          Dynamic import only inside webllm.adapter.ts.
+          Never at top-level — it is heavy and must be code-split.
+          import('@mlc-ai/web-llm') inside an async init() method.
+        webgpu_check: >
+          Always check typeof navigator !== 'undefined' && 'gpu' in navigator
+          before attempting WebLLM init. If false, skip to MockAdapter.
+
+    agent_tasks: >
+      The agent performs ONLY these structured tasks. Prompts are designed
+      for JSON or short deterministic text output — not open-ended generation.
+      All prompts are defined in packages/agent-core/src/prompts.ts.
+      Never write prompts inline in adapters or components.
+
+      Task types:
+        layout_restructure  — Returns BentoLayoutConfig[] JSON
+        intent_classify     — Returns one of N predefined intent strings
+        anomaly_summarise   — Returns 1–2 sentence plain text
+        action_suggest      — Returns SuggestionChip[] JSON
+        metric_explain      — Returns short plain text explanation
+
+    agent_context:
+      type_file: packages/agent-core/src/context.types.ts
+      shape: |
+        type AgentContext = {
+          tenantId       : string
+          userId         : string
+          currentRoute   : string
+          visibleCards   : BentoCardConfig[]
+          activeMetrics  : MetricSnapshot[]
+          recentActivity : ActivityEvent[]
+          userMessage    : string
+        }
+      assembly: >
+        Assembled by useAgentContext() hook in apps/demo before each send.
+        Serialised into prompt string for Ollama/WebLLM.
+        Sent as structured data for Claude/OpenAI via API route.
+
+    adapter_rules:
+      - AgentAdapter interface is the ONLY contract ui-agent touches.
+      - ui-agent never imports a concrete adapter — only the factory output.
+      - All AI calls are non-blocking. UI never freezes waiting for response.
+      - Every adapter implements: chat(), streamChat(), getStatus(), destroy().
+      - All adapters return AgentResponse type — never adapter-specific shapes.
+      - Prompts live in prompts.ts only — never inline in adapters.
+      - Adding a provider: implement AgentAdapter, register in factory,
+        add env var to .env.example, document in CONTRIBUTING.md.
+        No other files change.
+
+  local_llm_packages:
+    ollama: built-in REST client — no extra npm package needed
+    webllm:
+      package: "@mlc-ai/web-llm"
+      version: "0.2.x"
+      scope: packages/agent-core (optional peer dep)
+
+  icons:
+    library: Lucide React
+    rules:
+      - Lucide React only. No other icon library.
+      - Import individually: `import { ChevronDown } from 'lucide-react'`
+      - Each package that uses icons lists lucide-react as a peer dependency.
+
+  forms:
+    libraries: React Hook Form + Zod
+    scope: "@novasphere/ui-auth package"
+    rules:
+      - All forms use React Hook Form with zodResolver.
+      - Zod schemas in packages/ui-auth/src/schemas/ named [resource].schema.ts
+      - Never use uncontrolled inputs outside React Hook Form.
+
+  testing:
+    libraries:
+      - Vitest (unit tests — package-level)
+      - React Testing Library (component tests — package-level)
+      - Playwright (E2E tests — apps/demo level)
+      - Storybook (interaction tests + visual — per package)
+    rules:
+      - See Section 8 for full testing rules.
+
+  build:
+    package_bundler: tsup
+    rationale: >
+      tsup (esbuild-based) builds each package to CJS + ESM dual output.
+      Fast, minimal config, tree-shakeable output. Each package has its own
+      tsup.config.ts. The demo app uses Next.js's built-in bundler.
+    output_formats: ["cjs", "esm"]
+    declaration_files: true
+    source_maps: true
+
+  versioning:
+    tool: Changesets (@changesets/cli)
+    rationale: >
+      Changesets manages independent versioning of each package.
+      When a PR changes ui-glass and agent-core, each gets its own
+      version bump and changelog entry. The demo app is not versioned
+      (it is not published). Changesets integrates with GitHub Actions
+      for automated npm releases.
+    config_file: .changeset/config.json
+    rules:
+      - Every PR that changes a package includes a changeset file.
+      - Run `pnpm changeset` to create one. Cursor must remind developers.
+      - Version bumps follow semver strictly.
+      - Breaking changes in any package require a major version bump.
+
+  package_manager: pnpm
+  node_version: ">=20.0.0"
+
+
+# =============================================================================
+# 4. FULL REPOSITORY STRUCTURE
+# =============================================================================
+# FIXED. Cursor must never create files outside these locations without
+# explicit developer approval. When in doubt about where a file belongs,
+# check the package registry in Section 2 first, then ask.
+# =============================================================================
+
+structure: |
+  novasphere/                              # Monorepo root
+  ├── .cursorrules                         # This file
+  ├── .changeset/
+  │   ├── config.json                      # Changesets config
+  │   └── README.md
+  ├── .github/
+  │   ├── workflows/
+  │   │   ├── ci.yml                       # Lint + typecheck + test on every PR
+  │   │   ├── release.yml                  # Publish packages on merge to main
+  │   │   └── e2e.yml                      # Playwright on PRs touching apps/demo
+  │   ├── ISSUE_TEMPLATE/
+  │   │   ├── bug_report.md
+  │   │   └── feature_request.md
+  │   └── pull_request_template.md
+  ├── .storybook/                          # Shared Storybook config (all packages)
+  │   ├── main.ts
+  │   └── preview.ts
+  ├── apps/
+  │   └── demo/                           # Next.js 14 demo application
+  │       ├── public/
+  │       │   └── fonts/                  # Self-hosted fonts only
+  │       ├── src/
+  │       │   ├── app/                    # Next.js App Router
+  │       │   │   ├── layout.tsx          # Root layout (RSC)
+  │       │   │   ├── page.tsx            # Redirect → /demo/dashboard
+  │       │   │   ├── (dashboard)/        # Route group — main app
+  │       │   │   │   ├── layout.tsx      # Dashboard shell
+  │       │   │   │   └── [tenant]/
+  │       │   │   │       └── page.tsx    # Main dashboard page
+  │       │   │   ├── (auth)/             # Route group — auth pages
+  │       │   │   │   ├── login/page.tsx
+  │       │   │   │   └── layout.tsx
+  │       │   │   └── api/                # API routes (server-side only)
+  │       │   │       ├── agent/route.ts  # Copilot — proxies to AI adapters
+  │       │   │       ├── metrics/route.ts
+  │       │   │       └── tenant/route.ts
+  │       │   ├── hooks/                  # TanStack Query hooks
+  │       │   │   ├── useMetricsList.ts
+  │       │   │   └── useTenantConfig.ts
+  │       │   ├── mocks/                  # Mock data (demo only)
+  │       │   │   ├── metrics.mock.ts
+  │       │   │   ├── agent-responses.mock.ts
+  │       │   │   └── tenants.mock.ts
+  │       │   ├── store/                  # Zustand stores (demo only)
+  │       │   │   ├── layout.store.ts
+  │       │   │   ├── agent.store.ts
+  │       │   │   └── tenant.store.ts
+  │       │   └── styles/
+  │       │       └── globals.css         # Tailwind directives + token import
+  │       ├── middleware.ts               # Tenant resolution
+  │       ├── next.config.ts
+  │       ├── tailwind.config.ts          # Imports @novasphere/tokens preset
+  │       ├── tsconfig.json               # Extends ../../tsconfig.base.json
+  │       ├── .env.example
+  │       └── package.json
+  │
+  ├── packages/
+  │   │
+  │   ├── tokens/                         # @novasphere/tokens
+  │   │   ├── src/
+  │   │   │   ├── tokens.css              # CSS custom properties
+  │   │   │   ├── tailwind.preset.ts      # Tailwind preset export
+  │   │   │   └── index.ts               # TS token constants
+  │   │   ├── package.json
+  │   │   ├── tsup.config.ts
+  │   │   └── tsconfig.json
+  │   │
+  │   ├── agent-core/                     # @novasphere/agent-core
+  │   │   ├── src/
+  │   │   │   ├── adapter.interface.ts
+  │   │   │   ├── adapter.factory.ts
+  │   │   │   ├── context.types.ts
+  │   │   │   ├── prompts.ts
+  │   │   │   ├── agent.types.ts
+  │   │   │   └── adapters/
+  │   │   │       ├── ollama.adapter.ts
+  │   │   │       ├── webllm.adapter.ts
+  │   │   │       ├── claude.adapter.ts
+  │   │   │       ├── openai.adapter.ts
+  │   │   │       └── mock.adapter.ts
+  │   │   ├── index.ts                    # Public API barrel
+  │   │   ├── package.json
+  │   │   ├── tsup.config.ts
+  │   │   └── tsconfig.json
+  │   │
+  │   ├── tenant-core/                    # @novasphere/tenant-core
+  │   │   ├── src/
+  │   │   │   ├── tenant.types.ts
+  │   │   │   ├── tenant.registry.ts
+  │   │   │   └── tenant.resolver.ts
+  │   │   ├── index.ts
+  │   │   ├── package.json
+  │   │   ├── tsup.config.ts
+  │   │   └── tsconfig.json
+  │   │
+  │   ├── ui-glass/                       # @novasphere/ui-glass
+  │   │   ├── src/
+  │   │   │   ├── ui/                     # shadcn/ui source (DO NOT EDIT)
+  │   │   │   ├── GlassCard/
+  │   │   │   │   ├── GlassCard.tsx
+  │   │   │   │   ├── GlassCard.module.css
+  │   │   │   │   ├── GlassCard.stories.tsx
+  │   │   │   │   ├── GlassCard.test.tsx
+  │   │   │   │   └── index.ts
+  │   │   │   ├── GlassPanel/
+  │   │   │   ├── GlassModal/
+  │   │   │   ├── AmbientBackground/
+  │   │   │   └── GrainOverlay/
+  │   │   ├── index.ts
+  │   │   ├── package.json
+  │   │   ├── tailwind.config.ts
+  │   │   ├── tsup.config.ts
+  │   │   └── tsconfig.json
+  │   │
+  │   ├── ui-bento/                       # @novasphere/ui-bento
+  │   │   ├── src/
+  │   │   │   ├── BentoGrid/
+  │   │   │   ├── BentoCard/
+  │   │   │   ├── BentoSpan/
+  │   │   │   ├── bento.types.ts
+  │   │   │   └── variants.ts             # Framer Motion variants
+  │   │   ├── index.ts
+  │   │   ├── package.json
+  │   │   ├── tailwind.config.ts
+  │   │   ├── tsup.config.ts
+  │   │   └── tsconfig.json
+  │   │
+  │   ├── ui-charts/                      # @novasphere/ui-charts
+  │   │   ├── src/
+  │   │   │   ├── SparklineChart/
+  │   │   │   ├── DonutChart/
+  │   │   │   ├── AreaChart/
+  │   │   │   ├── HeatmapChart/
+  │   │   │   └── chart.types.ts
+  │   │   ├── index.ts
+  │   │   ├── package.json
+  │   │   ├── tailwind.config.ts
+  │   │   ├── tsup.config.ts
+  │   │   └── tsconfig.json
+  │   │
+  │   ├── ui-agent/                       # @novasphere/ui-agent
+  │   │   ├── src/
+  │   │   │   ├── CopilotPanel/
+  │   │   │   ├── AgentMessage/
+  │   │   │   ├── SuggestionChips/
+  │   │   │   ├── TypingIndicator/
+  │   │   │   ├── AdapterStatusBadge/
+  │   │   │   ├── AdapterInfoPopover/
+  │   │   │   └── variants.ts
+  │   │   ├── index.ts
+  │   │   ├── package.json
+  │   │   ├── tailwind.config.ts
+  │   │   ├── tsup.config.ts
+  │   │   └── tsconfig.json
+  │   │
+  │   ├── ui-auth/                        # @novasphere/ui-auth
+  │   │   ├── src/
+  │   │   │   ├── LoginForm/
+  │   │   │   ├── SignupForm/
+  │   │   │   ├── ForgotPasswordForm/
+  │   │   │   ├── UserMenu/
+  │   │   │   ├── AuthGuard/
+  │   │   │   ├── TenantSwitcher/
+  │   │   │   ├── auth.adapter.interface.ts
+  │   │   │   ├── auth.types.ts
+  │   │   │   └── schemas/
+  │   │   │       ├── login.schema.ts
+  │   │   │       └── signup.schema.ts
+  │   │   ├── index.ts
+  │   │   ├── package.json
+  │   │   ├── tailwind.config.ts
+  │   │   ├── tsup.config.ts
+  │   │   └── tsconfig.json
+  │   │
+  │   └── ui-shell/                       # @novasphere/ui-shell
+  │       ├── src/
+  │       │   ├── AppShell/
+  │       │   ├── Sidebar/
+  │       │   ├── Topbar/
+  │       │   ├── NavItem/
+  │       │   ├── BreadcrumbBar/
+  │       │   └── variants.ts
+  │       ├── index.ts
+  │       ├── package.json
+  │       ├── tailwind.config.ts
+  │       ├── tsup.config.ts
+  │       └── tsconfig.json
+  │
+  ├── tests/
+  │   └── e2e/                            # Playwright E2E (runs against apps/demo)
+  │       ├── dashboard.spec.ts
+  │       ├── copilot.spec.ts
+  │       ├── auth.spec.ts
+  │       └── pages/                      # Page Object Models
+  │           ├── DashboardPage.ts
+  │           └── CopilotPage.ts
+  │
+  ├── nova.config.ts                      # Top-level config (future CLI target)
+  ├── tsconfig.base.json                  # Base TS config — all packages extend this
+  ├── pnpm-workspace.yaml                 # Workspace definition
+  ├── package.json                        # Root package.json (scripts only)
+  ├── .eslintrc.json                      # Root ESLint (applies to all packages)
+  ├── .prettierrc
+  ├── playwright.config.ts                # E2E config (points to apps/demo)
+  ├── CHANGELOG.md
+  ├── CONTRIBUTING.md
+  ├── LICENSE
+  └── README.md
+
+
+# =============================================================================
+# 5. NAMING CONVENTIONS
+# =============================================================================
+
+naming:
+  files:
+    components: "PascalCase — ComponentName.tsx"
+    stories: "PascalCase — ComponentName.stories.tsx"
+    tests: "PascalCase — ComponentName.test.tsx"
+    css_modules: "PascalCase — ComponentName.module.css"
+    hooks: "camelCase — useResourceAction.ts"
+    stores: "camelCase — domain.store.ts"
+    types: "camelCase — domain.types.ts"
+    schemas: "camelCase — resource.schema.ts"
+    utils: "camelCase — utilityName.ts"
+    api_routes: "always route.ts (Next.js App Router convention)"
+    mocks: "camelCase — resource.mock.ts"
+    adapters: "camelCase — provider.adapter.ts"
+    barrel_exports: "always index.ts"
+
+  typescript:
+    components: PascalCase
+    types: PascalCase
+    props_type: "[ComponentName]Props"
+    hooks: "use[Resource][Action]"
+    store_hooks: "use[Domain]Store"
+    constants: SCREAMING_SNAKE_CASE
+    enums: "FORBIDDEN — use `as const` objects"
+    zod_schemas: "camelCase + Schema suffix (e.g. loginFormSchema)"
+    api_response_types: "PascalCase + Response suffix (e.g. MetricsResponse)"
+    event_handlers: "handle[Event] prefix (e.g. handleSubmit)"
+    adapter_interfaces: "[Provider]Adapter (e.g. AgentAdapter, AuthAdapter)"
+
+  packages:
+    npm_scope: "@novasphere"
+    directory_name: "kebab-case matching npm name without scope
+                     (e.g. @novasphere/ui-glass → packages/ui-glass)"
+
+  css:
+    module_classes: "camelCase (e.g. .glassCard, .ambientLayer)"
+    css_variables: "--ns-[category]-[property] (e.g. --ns-color-accent)"
+    keyframes: "camelCase (e.g. @keyframes ambientShift)"
+
+  git:
+    branches: "[type]/[scope]/[short-description]
+               (e.g. feat/ui-glass/ambient-animation,
+                     fix/agent-core/ollama-timeout,
+                     chore/tokens/add-blur-tokens)"
+    commits: "Conventional Commits — see Section 9"
+
+
+# =============================================================================
+# 6. COMPONENT RULES
+# =============================================================================
+
+components:
+  structure: |
+    Every component folder contains exactly:
+      ComponentName.tsx          — implementation
+      ComponentName.module.css   — styles (only if glass/animation effects)
+      ComponentName.stories.tsx  — Storybook stories (REQUIRED)
+      ComponentName.test.tsx     — RTL tests (REQUIRED)
+      index.ts                   — barrel: export default + export type Props
+
+  file_header_template: |
+    // SPDX-License-Identifier: MIT
+    // @novasphere/[package-name] — ComponentName
+    // [one-line description of what this component does and nothing more]
+
+  component_template: |
+    "use client" // DELETE this line if component does not need client features
+
+    import type { ComponentNameProps } from './ComponentName'
+    // other imports — package imports before relative imports
+
+    export type ComponentNameProps = {
+      // ALL props explicitly typed — no untyped or implicit props
+      // optional props must have default values defined in destructuring
+    }
+
+    export default function ComponentName({
+      prop1,
+      prop2 = 'default',
+    }: ComponentNameProps): JSX.Element {
+      // implementation
+    }
+
+  rules:
+    - Components are pure and presentational by default. All logic in hooks.
+    - No component may exceed 200 lines. Split into sub-components if needed.
+    - No component may have more than 8 props. Use a config object if needed.
+    - No component imports from another component's internal files —
+      only from its index.ts barrel export.
+    - Leaf components do not access Zustand stores directly. Props only.
+      Store access is allowed only in panel-level and page-level components.
+    - No hardcoded user-facing strings. All copy passed as props or from
+      a copy object in the same package.
+    - Every interactive element has aria-label or visible label text.
+    - No click handlers on non-interactive HTML elements.
+    - children typed as React.ReactNode always.
+    - Loading and error states are mandatory for async data components.
+    - "use client" is deleted from the file if not needed — never left in.
+
+
+# =============================================================================
+# 7. PACKAGE.JSON RULES
+# =============================================================================
+# Each package has a package.json. Cursor must follow this template exactly.
+# =============================================================================
+
+package_json:
+  template: |
+    {
+      "name": "@novasphere/[package-name]",
+      "version": "0.0.1",
+      "description": "[one sentence from package registry in Section 2]",
+      "license": "MIT",
+      "author": "novasphere contributors",
+      "repository": {
+        "type": "git",
+        "url": "https://github.com/your-org/novasphere",
+        "directory": "packages/[package-name]"
+      },
+      "main": "./dist/index.cjs",
+      "module": "./dist/index.js",
+      "types": "./dist/index.d.ts",
+      "exports": {
+        ".": {
+          "import": "./dist/index.js",
+          "require": "./dist/index.cjs",
+          "types": "./dist/index.d.ts"
+        }
+      },
+      "files": ["dist"],
+      "scripts": {
+        "build": "tsup",
+        "dev": "tsup --watch",
+        "typecheck": "tsc --noEmit",
+        "lint": "eslint src --max-warnings 0",
+        "test": "vitest run",
+        "test:watch": "vitest",
+        "storybook": "storybook dev -p [PORT]",
+        "storybook:build": "storybook build"
+      },
+      "peerDependencies": {},    // framework deps go here (react, framer-motion)
+      "dependencies": {},        // only @novasphere/* internal deps go here
+      "devDependencies": {}      // build tools, test libs, storybook
+    }
+
+  rules:
+    - peerDependencies contains React, React DOM, and any framework library
+      the package uses but does not bundle (framer-motion, recharts, zustand).
+    - dependencies contains only other @novasphere/* packages.
+    - devDependencies contains tsup, TypeScript, Vitest, RTL, Storybook.
+    - Never put a peerDependency also in dependencies — it will be bundled twice.
+    - The "files" field must only include "dist" — never ship src to npm.
+    - Storybook port numbers: tokens=6001, ui-glass=6002, ui-bento=6003,
+      ui-charts=6004, ui-agent=6005, ui-auth=6006, ui-shell=6007.
+
+
+# =============================================================================
+# 8. TESTING RULES
+# =============================================================================
+
+testing:
+  philosophy: >
+    Test behaviour, not implementation. Tests describe what a user or system
+    experiences — not internal state or function names. If a test breaks when
+    you rename a variable but the UI is unchanged, the test is wrong.
+
+  unit_and_component_tests:
+    tools: Vitest + React Testing Library
+    location: "[package]/src/ComponentName/ComponentName.test.tsx"
+    rules:
+      - Every component in every package requires a test file.
+      - Tests cover: renders without crash, correct output given props,
+        interactive states (click/focus/keyboard), loading state, error state,
+        empty state.
+      - Use screen.getByRole over getByTestId wherever semantics allow.
+      - Never test Tailwind class names or CSS properties — test visible output.
+      - Never mock Zustand stores — use real store instances with test data.
+      - Mock only: network calls (use msw), timers, random values.
+      - Use userEvent over fireEvent for all user interactions.
+      - Each package runs tests independently: `pnpm --filter @novasphere/ui-glass test`
+
+  e2e_tests:
+    tool: Playwright
+    location: tests/e2e/
+    naming: feature-name.spec.ts
+    scope: Runs against apps/demo only
+    critical_journeys:
+      - Dashboard loads with mock data and all bento cards render
+      - Copilot panel opens, message sent, response rendered
+      - Agent dispatches layout change, bento grid reorders
+      - Tenant config changes theme tokens correctly
+      - Auth forms render and validate (mock auth)
+      - Adapter status badge shows correct engine
+      - WebGPU unavailable degrades gracefully to Mock
+    rules:
+      - Page Object Model required for flows with 3+ steps.
+      - Never use fixed timeouts — always await elements or network idle.
+      - Run against MockAdapter only in CI — no real API keys in CI.
+      - Playwright accessibility checks run on every page test.
+
+  storybook:
+    location: "[package]/src/ComponentName/ComponentName.stories.tsx"
+    rules:
+      - Every component has a Default story with all required props.
+      - Every significant prop variant has its own named story.
+      - Glass components render on dark background (default).
+      - Interaction tests (@storybook/test) required for:
+          CopilotPanel (send message flow)
+          BentoCard (drag interaction)
+          LoginForm (submit + validation)
+          Any component with internal state transitions
+      - Stories use mock data from the package's own src/mocks/ or
+        from @novasphere/agent-core mocks — never inline fake data.
+
+  coverage:
+    minimum: 80% per package for components
+    enforcement: CI fails below threshold per package
+
+
+# =============================================================================
+# 9. GIT & CONTRIBUTION RULES
+# =============================================================================
+
+git:
+  strategy: GitHub Flow (main + feature branches)
+  main_branch: main
+  rules:
+    - main is always deployable and always passes CI.
+    - All work on feature branches cut from main.
+    - Branch format: [type]/[package-scope]/[short-description]
+        feat/ui-glass/grain-overlay
+        fix/agent-core/ollama-timeout-handling
+        chore/tokens/add-shadow-tokens
+        docs/root/update-contributing
+    - Branches deleted after merge.
+    - No force pushes to main — ever.
+    - Squash merge only — one clean commit per feature lands on main.
+
+  commits:
+    spec: Conventional Commits v1.0.0
+    format: "[type]([scope]): [short imperative description]"
+    scopes:
+      tokens        : design token package
+      ui-glass      : Liquid Glass components
+      ui-bento      : Bento Grid system
+      ui-charts     : chart components
+      ui-agent      : Copilot Panel UI
+      ui-auth       : auth UI components
+      ui-shell      : app shell components
+      agent-core    : AI adapter system
+      tenant-core   : tenancy system
+      demo          : apps/demo changes
+      e2e           : Playwright tests
+      ci            : GitHub Actions workflows
+      dx            : developer experience / tooling
+      deps          : dependency updates
+      changeset     : changeset file additions
+    examples:
+      - "feat(ui-bento): add drag-to-reorder with Framer Motion"
+      - "fix(agent-core): handle Ollama 2s timeout gracefully"
+      - "feat(ui-auth): add TenantSwitcher component"
+      - "chore(deps): update @mlc-ai/web-llm to 0.2.4"
+      - "feat(agent-core)!: change AgentAdapter interface — streamChat signature"
+    rules:
+      - Imperative mood, lowercase, no trailing period.
+      - Breaking changes: add "!" after scope.
+      - 72 char max in subject line.
+      - PR that changes a package MUST also include a changeset file.
+        Run `pnpm changeset` and commit the generated file.
+
+  pull_requests:
+    rules:
+      - Description explains the WHY, not the what.
+      - References a GitHub issue: "Closes #N"
+      - CI must pass (lint + typecheck + tests + build) before merge.
+      - PR title follows Conventional Commits format.
+      - Changeset file included for any package change.
+
+
+# =============================================================================
+# 10. ENVIRONMENT VARIABLES
+# =============================================================================
+
+env:
+  location: apps/demo/.env.example (all vars documented here)
+  rules:
+    - .env.local is git-ignored. Never committed.
+    - Client vars prefixed NEXT_PUBLIC_ only.
+    - Secret vars (API keys) NEVER prefixed NEXT_PUBLIC_.
+    - All vars validated at startup via Zod in apps/demo/src/lib/env.ts.
+      App fails fast with a clear error message if required vars are missing.
+    - Packages never read env vars directly — they receive config via props
+      or constructor arguments from the app layer.
+
+  variables: |
+    # ── App ──────────────────────────────────────────────────────────────
+    NEXT_PUBLIC_APP_URL         # Base URL (e.g. http://localhost:3000)
+    NEXT_PUBLIC_DATA_SOURCE     # mock | api  (default: mock)
+    NEXT_PUBLIC_TENANT_MODE     # static | dynamic  (default: static)
+
+    # ── AI Adapter ───────────────────────────────────────────────────────
+    NEXT_PUBLIC_AI_ADAPTER      # auto|ollama|webllm|claude|openai|mock
+                                # default: auto (factory resolves priority chain)
+
+    # ── Local LLM — Ollama ───────────────────────────────────────────────
+    OLLAMA_BASE_URL             # default: http://localhost:11434
+    OLLAMA_MODEL                # default: qwen2.5:0.5b
+    OLLAMA_TIMEOUT_MS           # default: 2000
+
+    # ── External AI (server-side only — never NEXT_PUBLIC_) ──────────────
+    ANTHROPIC_API_KEY           # Activates ClaudeAdapter
+    ANTHROPIC_MODEL             # default: claude-3-5-haiku-20241022
+    OPENAI_API_KEY              # Activates OpenAIAdapter (if no Anthropic key)
+    OPENAI_MODEL                # default: gpt-4o-mini
+    OPENAI_BASE_URL             # Custom base URL for OpenAI-compatible APIs
+
+    # ── Security ─────────────────────────────────────────────────────────
+    RATE_LIMIT_AGENT_RPM        # Max agent requests/min per IP (default: 20)
+
+
+# =============================================================================
+# 11. LOCAL LLM UX RULES
+# =============================================================================
+
+local_llm_ux:
+  adapter_status_badge:
+    component: packages/ui-agent/src/AdapterStatusBadge/
+    location_in_ui: CopilotPanel header — always visible
+    states:
+      checking    : "Detecting AI engine…"
+      ollama      : "● Local · Qwen2.5 0.5B"      # green dot
+      webllm      : "● Browser · Phi-3 Mini"        # blue dot
+      downloading : "↓ Loading model [XX%]"
+      claude      : "● Claude"                      # purple dot
+      openai      : "● GPT"                         # teal dot
+      mock        : "◌ Demo mode"                   # muted
+    click_action: >
+      Opens AdapterInfoPopover explaining what is running and how to change.
+      This is the primary discoverability surface for the adapter system.
+    rules:
+      - Always visible — never hidden. Transparency is a core value.
+      - Status sourced from agent store's adapterStatus field.
+      - Never shows an error — always shows a state.
+
+  ollama_not_running:
+    behaviour: >
+      Silently falls through to WebLLMAdapter. Shows one-time dismissible
+      banner in CopilotPanel: "Ollama not detected — running in browser mode.
+      Install Ollama for faster responses." with link to https://ollama.com
+    rules:
+      - Never block the UI. Health check is async and non-blocking.
+      - Panel loads immediately in 'checking' state.
+      - Banner is dismissible and never shown again after dismissed (localStorage).
+
+  webllm_first_load:
+    behaviour: >
+      Shows download progress bar in CopilotPanel body:
+        - Percentage + MB downloaded / total MB
+        - Estimated time remaining
+        - "One-time download — instant on next load" note
+      Copilot input disabled during download. Rest of dashboard fully usable.
+    store_field: agent.store.ts → downloadProgress: number (0–100)
+    rules:
+      - Progress from WebLLM's initProgressCallback only — never estimated.
+      - Animate to 100% then fade out on completion.
+      - Only shown for WebLLMAdapter — never for other adapters.
+
+
+# =============================================================================
+# 12. API ROUTE RULES
+# =============================================================================
+
+api:
+  location: apps/demo/src/app/api/
+  rules:
+    - Export only named HTTP method handlers: GET, POST, PUT, DELETE.
+    - Validate all request bodies with Zod before processing.
+    - Consistent response shape:
+        success: { data: T, error: null }
+        failure: { data: null, error: { code: string, message: string } }
+    - Never return raw data shapes — always map to a typed response type.
+    - API routes never import from packages' internal src/ — only from index.ts.
+    - Auth check at the top of every protected route.
+    - Never log API keys, tokens, or PII.
+    - Semantically correct HTTP status codes always.
+    - Rate limiting on /api/agent route via RATE_LIMIT_AGENT_RPM.
+
+
+# =============================================================================
+# 13. PERFORMANCE RULES
+# =============================================================================
+
+performance:
+  rules:
+    - Images: next/image always. Never raw <img> in apps/demo.
+    - Fonts: next/font with self-hosted files in apps/demo/public/fonts/.
+    - Icons: import individually from lucide-react. Never the barrel import.
+    - Heavy components use dynamic() with { ssr: false }:
+        CopilotPanel, all chart components, AdapterInfoPopover.
+    - WebLLM adapter uses dynamic import inside async init() — never top-level.
+    - Glass layers: max 3 stacked in any viewport region. More = perf review.
+    - Continuous animations (ambient, pulse, shimmer) in CSS keyframes.
+      Discrete interactions in Framer Motion.
+    - Each package is built with tsup tree-shaking enabled.
+    - Bundle budget: no single package's dist exceeds 50KB gzipped (excl. assets).
+    - Run `pnpm --filter apps/demo analyze` before every demo release.
+
+
+# =============================================================================
+# 14. ACCESSIBILITY RULES
+# =============================================================================
+
+accessibility:
+  standard: WCAG 2.1 AA
+  rules:
+    - All interactive elements keyboard navigable.
+    - Focus rings visible — never `outline: none` without custom focus style.
+    - Colour contrast: 4.5:1 for text, 3:1 for UI components.
+    - Images: meaningful alt text or aria-hidden="true" if decorative.
+    - All CSS animations wrapped in @media (prefers-reduced-motion: no-preference).
+    - CopilotPanel fully keyboard accessible: open, type, send, close, dismiss.
+    - Bento grid logical tab order matches visual order.
+    - shadcn/ui ARIA attributes are never overridden.
+    - Playwright accessibility checks run on every E2E page test.
+
+
+# =============================================================================
+# 15. SECURITY RULES
+# =============================================================================
+
+security:
+  rules:
+    - No secrets in client-side code, packages, or git history — ever.
+    - External URLs validated before use — no open redirect vulnerabilities.
+    - Tenant ID from request always validated server-side in API routes.
+      Never trust a client-provided tenant ID without server verification.
+    - CSP headers configured in apps/demo/next.config.ts.
+    - `pnpm audit` run before every release. Failing audit blocks release.
+    - dangerouslySetInnerHTML never used without DOMPurify sanitisation.
+    - Rate limiting on /api/agent to prevent AI cost abuse.
+    - Packages never read process.env — env config passed from app layer only.
+
+
+# =============================================================================
+# 16. DOCUMENTATION RULES
+# =============================================================================
+
+documentation:
+  rules:
+    - Every exported function, type, hook, component has a JSDoc comment.
+    - JSDoc format:
+        /**
+         * [What it does — one sentence maximum]
+         *
+         * @param propName - [what it is]
+         * @returns [what comes back]
+         * @example
+         * <ComponentName prop="value" />
+         */
+    - Each package has its own README.md covering:
+        - What it is (one paragraph)
+        - Installation (npm install command)
+        - Basic usage example
+        - Link to Storybook
+        - List of exports
+    - Root README.md covers: what novasphere is, monorepo structure,
+      quick start (pnpm install + pnpm dev), and links to each package.
+    - CONTRIBUTING.md covers: setup, branching, commit format, changesets,
+      testing, adding a new adapter, adding a new component, adding a package.
+    - CHANGELOG.md auto-generated by Changesets on release.
+    - nova.config.ts heavily commented — first config file a developer reads.
+    - TODO comments require a linked GitHub issue: // TODO(#123): description
+
+
+# =============================================================================
+# 17. CURSOR BEHAVIOURAL RULES
+# =============================================================================
+
+cursor_behaviour:
+  before_writing_code:
+    - Identify which package the task belongs to using Section 2 registry.
+    - Confirm the file location matches Section 4 structure exactly.
+    - Confirm naming matches Section 5.
+    - Check boundary rules in Section 2 — is this import allowed?
+    - If task requires a library not in Section 3 — STOP and ask.
+    - If task is ambiguous about which package it belongs in — STOP and ask.
+    - If task would create a new package — STOP and ask.
+
+  while_writing_code:
+    - Never generate placeholder content in production code paths.
+      Mocks live in apps/demo/src/mocks/ or within the package's own test files.
+    - Never add console.log. Use error boundaries and structured logging.
+    - Never skip TypeScript types to make something compile faster.
+    - Never hardcode a design value — add the token to @novasphere/tokens first.
+    - Never write a prompt inline — add it to agent-core/src/prompts.ts.
+    - Write the test in the same session as the component. Never defer.
+    - Add a changeset after changing any publishable package.
+
+  when_uncertain:
+    - Do NOT guess at business logic, data shapes, or user-facing copy.
+    - Do NOT choose between two architectural approaches silently.
+    - Do NOT assume a boundary is safe without checking Section 2 explicitly.
+    - State the assumption and ask for confirmation before proceeding.
+
+  never_do:
+    - Never use the Pages Router (pages/ directory) anywhere.
+    - Never use `any` in TypeScript anywhere.
+    - Never install a dependency without adding it to this file first.
+    - Never import across a forbidden package boundary (Section 2).
+    - Never put logic in apps/demo that belongs in a package.
+    - Never put a Zustand store inside a package (except ui-agent's local store).
+    - Never hardcode tenant-specific data anywhere.
+    - Never commit API keys, even in comments or examples.
+    - Never create a CSS variable outside @novasphere/tokens.
+    - Never modify files in any package's src/ui/ (shadcn source).
+    - Never skip a Storybook story for a new component.
+    - Never push directly to main.
+    - Never publish a package without a changeset.
+
+
+# =============================================================================
+# 18. NOVA.CONFIG.TS — TOP-LEVEL PROJECT CONFIG
+# =============================================================================
+# Lives at the monorepo root. Future target for the novasphere CLI.
+# This is what a CLI wizard would generate. All top-level values live here.
+# =============================================================================
+
+nova_config:
+  location: nova.config.ts (monorepo root)
+  shape: |
+    // nova.config.ts
+    // This file is the top-level configuration for novasphere.
+    // Future versions of the novasphere CLI will generate this file.
+    // Change values here to customise the demo app and package defaults.
+
+    export const novaConfig = {
+      project: {
+        name: 'novasphere',
+        version: '0.1.0',
+      },
+      theme: {
+        accentColor:  '#4f8ef7',   // primary brand colour
+        accentColor2: '#a78bfa',   // secondary
+        accentColor3: '#34d399',   // success / positive
+        glassBlur:    'md',        // 'sm' | 'md' | 'lg'
+        borderRadius: 'lg',        // 'sm' | 'md' | 'lg' | 'xl'
+        darkMode:     true,        // false = light mode default
+      },
+      agent: {
+        adapter:           'auto',        // 'auto'|'ollama'|'webllm'|'claude'|'openai'|'mock'
+        name:              'Nova',        // display name of the copilot
+        avatarEmoji:       '🤖',
+        ollamaModel:       'qwen2.5:0.5b',
+        showAdapterStatus: true,          // show engine badge in CopilotPanel
+      },
+      tenant: {
+        mode:            'static',        // 'static' | 'dynamic'
+        defaultTenantId: 'demo',
+      },
+      features: {
+        bentoReorder:      true,   // drag-to-reorder bento cards
+        generativeLayout:  true,   // agent can restructure layout
+        multiTenant:       false,  // tenant switching UI
+        authEnabled:       false,  // show auth UI in demo
+      },
+    } as const
+
+    export type NovaConfig = typeof novaConfig
+
+  rules:
+    - nova.config.ts is the ONLY place top-level values are defined.
+    - Components and packages read config via the useNovaConfig() hook
+      in apps/demo — they never import nova.config.ts directly.
+    - Packages accept config values as props — they are never hardwired
+      to nova.config.ts. The app layer reads config and passes it down.
+    - Adding a feature flag: add to nova.config.ts, add to NovaConfig type,
+      add a Storybook story variant, document in README.
+
+# =============================================================================
+# END OF CURSOR RULES
+# Version  : 0.3.0
+# Changes  : Full pnpm workspace monorepo architecture. Package registry.
+#             Package boundary rules. Independent versioning via Changesets.
+#             tsup build system. Per-package Storybook. Monorepo folder
+#             structure. Updated all section references and file paths.
+# =============================================================================

@@ -1,0 +1,56 @@
+/* SPDX-License-Identifier: MIT */
+/* @novasphere/ui-charts — HeatmapChart grid and token-based intensity */
+
+.heatmapGrid {
+  display: grid;
+  grid-template-rows: repeat(var(--heatmap-rows, 7), 1fr);
+  grid-template-columns: repeat(var(--heatmap-cols, 12), 1fr);
+  gap: 2px;
+  padding: 12px;
+  min-height: 100px;
+}
+
+.cell {
+  aspect-ratio: 1;
+  min-width: 8px;
+  min-height: 8px;
+  border: none;
+  border-radius: var(--ns-radius-sm);
+  cursor: default;
+  background: var(--ns-glass-bg-subtle);
+  transition: background 0.15s var(--ns-ease-smooth);
+}
+
+.cell[data-level="0"] {
+  background: var(--ns-glass-bg-subtle);
+}
+
+.cell[data-level="1"] {
+  background: color-mix(in srgb, var(--ns-color-accent) 20%, transparent);
+}
+
+.cell[data-level="2"] {
+  background: color-mix(in srgb, var(--ns-color-accent) 40%, transparent);
+}
+
+.cell[data-level="3"] {
+  background: color-mix(in srgb, var(--ns-color-accent) 65%, transparent);
+}
+
+.cell[data-level="4"] {
+  background: color-mix(in srgb, var(--ns-color-accent) 90%, transparent);
+}
+
+.tooltip {
+  position: fixed;
+  transform: translate(-50%, -100%);
+  margin-top: -8px;
+  padding: 4px 8px;
+  background: var(--ns-color-surface);
+  border: 1px solid var(--ns-color-border);
+  border-radius: var(--ns-radius-sm);
+  color: var(--ns-color-text);
+  font-size: 0.75rem;
+  pointer-events: none;
+  z-index: 50;
+}

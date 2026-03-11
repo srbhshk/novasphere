@@ -1,0 +1,54 @@
+/* SPDX-License-Identifier: MIT */
+/* @novasphere/ui-shell — NavItem glass and active glow */
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.625rem 0.75rem;
+  border-radius: var(--ns-radius-md);
+  color: var(--ns-color-text);
+  text-decoration: none;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.navItem:hover {
+  background: var(--ns-glass-bg-subtle);
+  color: var(--ns-color-text);
+}
+
+.navItemActive {
+  background: var(--ns-glass-bg-medium);
+  color: var(--ns-color-accent);
+  box-shadow: 0 0 0 1px rgba(79, 142, 247, 0.2), 0 0 12px var(--ns-glow-accent);
+}
+
+.navItemActive:hover {
+  background: var(--ns-glass-bg-medium);
+  color: var(--ns-color-accent);
+}
+
+.navItemCollapsed {
+  justify-content: center;
+  padding: 0.625rem;
+}
+
+.navItemCollapsed .navItemLabel {
+  display: none;
+}
+
+.iconWrap {
+  flex-shrink: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navItemLabel {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

@@ -1,0 +1,22 @@
+/* SPDX-License-Identifier: MIT */
+/* @novasphere/ui-charts — SparklineChart line draw animation */
+
+.sparklineWrapper :global(.recharts-line-curve) {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: sparklineDraw 0.6s var(--ns-ease-smooth) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sparklineWrapper :global(.recharts-line-curve) {
+    stroke-dasharray: none;
+    stroke-dashoffset: 0;
+    animation: none;
+  }
+}
+
+@keyframes sparklineDraw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}

@@ -1,0 +1,14 @@
+@import "@novasphere/tokens/tokens.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Apply token background so the app uses Liquid Glass base before shell mounts */
+@layer base {
+  html,
+  body {
+    background: var(--ns-color-bg);
+    color: var(--ns-color-text);
+  }
+}

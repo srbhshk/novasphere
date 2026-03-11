@@ -1,0 +1,67 @@
+{
+  "name": "@novasphere/ui-glass",
+  "version": "0.0.1",
+  "description": "Liquid Glass component system. The core visual aesthetic of novasphere. Contains GlassCard, GlassPanel, GlassModal, the ambient background layer, and the grain overlay.",
+  "license": "MIT",
+  "author": "novasphere contributors",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-org/novasphere",
+    "directory": "packages/ui-glass"
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup && cp src/GlassCard/GlassCard.module.css src/GlassPanel/GlassPanel.module.css src/AmbientBackground/AmbientBackground.module.css src/GrainOverlay/GrainOverlay.module.css dist/",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src --max-warnings 0",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "storybook": "storybook dev -p 6002",
+    "storybook:build": "storybook build"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-dom": "*"
+  },
+  "dependencies": {
+    "@novasphere/tokens": "workspace:*",
+    "@radix-ui/react-avatar": "^1.1.11",
+    "@radix-ui/react-dialog": "^1.1.15",
+    "@radix-ui/react-label": "^2.1.8",
+    "@radix-ui/react-popover": "^1.1.15",
+    "@radix-ui/react-scroll-area": "^1.2.10",
+    "@radix-ui/react-separator": "^1.1.8",
+    "@radix-ui/react-slot": "^1.2.4",
+    "@radix-ui/react-tooltip": "^1.2.8",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.460.0",
+    "tailwind-merge": "^2.5.4"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.0.0",
+    "@testing-library/user-event": "^14.5.2",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "tailwindcss": "^3.4.0",
+    "tsup": "^8.0.0",
+    "typescript": "~5.6.0",
+    "vitest": "^2.1.8",
+    "jsdom": "^25.0.0"
+  }
+}

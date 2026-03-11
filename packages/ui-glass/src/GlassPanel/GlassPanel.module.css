@@ -1,0 +1,39 @@
+/* SPDX-License-Identifier: MIT */
+/* @novasphere/ui-glass — GlassPanel glass styles */
+
+.glassPanel {
+  position: relative;
+  border: 1px solid var(--ns-color-border);
+  border-radius: var(--ns-radius-lg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.glassPanel.subtle {
+  background: var(--ns-glass-bg-subtle);
+  backdrop-filter: blur(var(--ns-blur-sm));
+}
+
+.glassPanel.medium {
+  background: var(--ns-glass-bg-medium);
+  backdrop-filter: blur(var(--ns-blur-md));
+}
+
+.glassPanel.strong {
+  background: var(--ns-glass-bg-strong);
+  backdrop-filter: blur(var(--ns-blur-lg));
+}
+
+.glassPanelHeader {
+  flex-shrink: 0;
+}
+
+.glassPanelBody {
+  flex: 1;
+  min-height: 0;
+}
+
+.glassPanelFooter {
+  flex-shrink: 0;
+}
