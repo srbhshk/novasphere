@@ -155,7 +155,7 @@ export default function DonutChart({
           )}
         </div>
         <ul
-          className="flex flex-wrap justify-center gap-x-4 gap-y-1 text-xs [color:var(--ns-color-muted)]"
+          className="flex flex-wrap justify-center gap-x-4 gap-y-1 text-xs [color:var(--ns-color-muted)] list-none"
           role="list"
         >
           {data.map((entry, i) => (

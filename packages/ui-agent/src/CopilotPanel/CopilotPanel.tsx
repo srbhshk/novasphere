@@ -265,14 +265,15 @@ export default function CopilotPanel({
     status === "thinking" || status === "streaming" || status === "downloading";
 
   if (!open) {
-    return (
+        return (
       <button
         type="button"
         onClick={() => setOpen(true)}
         className={cn(
           "fixed bottom-6 right-6 z-50 flex h-12 w-12 items-center justify-center rounded-full",
-          "bg-ns-surface border border-ns-border text-ns-text shadow-lg",
-          "hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ns-accent",
+          "border border-ns-border bg-ns-surface/80 text-ns-text shadow-lg",
+          "hover:border-ns-accent-2/60 hover:bg-ns-accent-2/20",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ns-accent-2",
           className
         )}
         aria-label="Open copilot"

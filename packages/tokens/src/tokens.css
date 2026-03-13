@@ -3,11 +3,15 @@
 /* Import this file in your app's globals.css */
 
 :root {
-  /* ── COLOR ───────────────────────────────────────────────────────────── */
-  --ns-color-bg: #06080f;
-  --ns-color-surface: #0c1120;
-  --ns-color-accent: #4f8ef7;
-  --ns-color-accent-2: #a78bfa;
+  /* ── COLOR — Spectral Edge (Default / Brand Theme) ──────────────────── */
+  /* Background: Deep Navy + Muted Plum */
+  --ns-color-bg: #020617;
+  --ns-color-surface: #020617;
+  /* Primary (Action): Vivid Amber */
+  --ns-color-accent: #f59e0b;
+  /* Agent/Copilot Accent: Hyper Pink */
+  --ns-color-accent-2: #ec4899;
+  /* Success / Positive */
   --ns-color-accent-3: #34d399;
   --ns-color-text: #e8ecf4;
   --ns-color-muted: #6b7897;
@@ -15,13 +19,16 @@
   --ns-color-border: rgba(255, 255, 255, 0.1);
   --ns-color-border-hi: rgba(255, 255, 255, 0.18);
 
-  /* ── GLASS ──────────────────────────────────────────────────────────── */
+  /* ── GLASS ─ Spectral Edge — Liquid Metal ───────────────────────────── */
+  /* The Glass (Bento Card): rgba(255, 255, 255, 0.03) | Blur: 40px | Backdrop-Saturate: 200% */
   --ns-glass-bg-subtle: rgba(255, 255, 255, 0.03);
-  --ns-glass-bg-medium: rgba(255, 255, 255, 0.05);
-  --ns-glass-bg-strong: rgba(255, 255, 255, 0.07);
-  --ns-blur-sm: 12px;
-  --ns-blur-md: 20px;
-  --ns-blur-lg: 32px;
+  --ns-glass-bg-medium: rgba(255, 255, 255, 0.03);
+  --ns-glass-bg-strong: rgba(255, 255, 255, 0.06);
+  --ns-blur-sm: 16px;
+  --ns-blur-md: 28px;
+  --ns-blur-lg: 40px;
+  --ns-glass-saturate: 2;
+  --ns-glass-contrast: 1.1;
 
   /* ── RADIUS ─────────────────────────────────────────────────────────── */
   --ns-radius-sm: 10px;
@@ -37,6 +44,81 @@
   --ns-duration-slow: 600ms;
 
   /* ── SHADOW / GLOW ──────────────────────────────────────────────────── */
-  --ns-glow-accent: rgba(79, 142, 247, 0.35);
-  --ns-glow-accent-2: rgba(167, 139, 250, 0.25);
+  --ns-glow-accent: rgba(245, 158, 11, 0.35);
+  --ns-glow-accent-2: rgba(236, 72, 153, 0.3);
+
+  /* ── NOISE ──────────────────────────────────────────────────────────── */
+  /* Spectral Edge: 0.05 opacity (hides gradient banding) */
+  --ns-noise-opacity: 0.05;
+}
+
+/* ── THEME VARIANTS ───────────────────────────────────────────────────── */
+
+/* 1. Silicon Frost (Light / System Default) */
+:root[data-theme="silicon-frost"] {
+  /* Background: CSS mesh */
+  --ns-color-bg: #e0e7ff;
+  --ns-color-surface: #f5f3ff;
+
+  /* Primary (Action): Ultramarine */
+  --ns-color-accent: #4338ca;
+  /* Agent/Copilot Accent: Soft Emerald */
+  --ns-color-accent-2: #10b981;
+  --ns-color-accent-3: #10b981;
+
+  --ns-color-text: #020617;
+  --ns-color-muted: #4b5563;
+  --ns-color-danger: #f97316;
+  --ns-color-border: rgba(15, 23, 42, 0.08);
+  --ns-color-border-hi: rgba(15, 23, 42, 0.14);
+
+  /* The Glass (Bento Card): rgba(255, 255, 255, 0.45) | Blur: 32px | Saturate: 180% */
+  --ns-glass-bg-subtle: rgba(255, 255, 255, 0.35);
+  --ns-glass-bg-medium: rgba(255, 255, 255, 0.45);
+  --ns-glass-bg-strong: rgba(255, 255, 255, 0.6);
+  --ns-blur-sm: 18px;
+  --ns-blur-md: 32px;
+  --ns-blur-lg: 40px;
+  --ns-glass-saturate: 1.8;
+  --ns-glass-contrast: 1.08;
+
+  /* Noise Texture: 0.02 opacity */
+  --ns-noise-opacity: 0.02;
+}
+
+/* 2. Subnet Deep (Dark / Pro Mode) */
+:root[data-theme="subnet-deep"] {
+  /* Background: Liquified Carbon */
+  --ns-color-bg: #020617;
+  --ns-color-surface: #0f172a;
+
+  /* Primary (Action): Electric Violet */
+  --ns-color-accent: #8b5cf6;
+  /* Agent/Copilot Accent: Cyber Cyan */
+  --ns-color-accent-2: #06b6d4;
+  --ns-color-accent-3: #22c55e;
+
+  --ns-color-text: #e5e7eb;
+  --ns-color-muted: #9ca3af;
+  --ns-color-danger: #f97316;
+  --ns-color-border: rgba(148, 163, 184, 0.35);
+  --ns-color-border-hi: rgba(148, 163, 184, 0.6);
+
+  /* The Glass (Bento Card): rgba(15, 23, 42, 0.65) | Blur: 20px */
+  --ns-glass-bg-subtle: rgba(15, 23, 42, 0.6);
+  --ns-glass-bg-medium: rgba(15, 23, 42, 0.65);
+  --ns-glass-bg-strong: rgba(15, 23, 42, 0.8);
+  --ns-blur-sm: 12px;
+  --ns-blur-md: 20px;
+  --ns-blur-lg: 28px;
+  --ns-glass-saturate: 1.6;
+  --ns-glass-contrast: 1.12;
+
+  /* Noise Texture: 0.04 opacity (monochrome grain) */
+  --ns-noise-opacity: 0.04;
+}
+
+/* 3. Spectral Edge (Default / Brand Theme) — explicit attribute override */
+:root[data-theme="spectral-edge"] {
+  --ns-noise-opacity: 0.05;
 }

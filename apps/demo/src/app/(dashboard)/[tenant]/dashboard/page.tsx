@@ -231,6 +231,27 @@ What would you like to investigate first?`,
   }, [addAgentMessage, setLayout]);
 
   React.useEffect(() => {
+    const handler = (event: Event): void => {
+      const maybeCustomEvent = event as CustomEvent<unknown>;
+      const detail = maybeCustomEvent.detail;
+      if (
+        detail &&
+        typeof detail === "object" &&
+        "presetInput" in detail &&
+        typeof (detail as { presetInput: unknown }).presetInput === "string"
+      ) {
+        const presetInput = (detail as { presetInput: string }).presetInput;
+        copilotRef.current?.openAndSetInput(presetInput);
+      }
+    };
+
+    window.addEventListener("novasphere:copilot-open", handler as EventListener);
+    return () => {
+      window.removeEventListener("novasphere:copilot-open", handler as EventListener);
+    };
+  }, []);
+
+  React.useEffect(() => {
     const handler = (event: KeyboardEvent) => {
       const isMetaOrCtrl = event.metaKey || event.ctrlKey;
       if (!isMetaOrCtrl) return;

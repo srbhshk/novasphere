@@ -27,7 +27,7 @@ export default function AppShell({
   tenant,
   children,
   currentPath,
-  title = "Dashboard",
+  title = "Dashboard1",
   sidebarUserSlot,
   topbarRightSlot,
 }: AppShellProps): JSX.Element {

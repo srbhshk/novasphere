@@ -32,8 +32,8 @@ export default function Topbar({
   return (
     <header className={styles.topbarRoot} role="banner">
       <GlassPanel
-        variant="subtle"
-        {...(styles.topbarPanel ? { className: styles.topbarPanel } : {})}
+        variant="strong"
+        className={styles.topbarPanel || ""}
       >
         <div className={styles.topbar}>
           <div className={styles.left}>

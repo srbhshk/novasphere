@@ -54,7 +54,7 @@ export default function AgentMessage({
           "max-w-[85%] rounded-lg px-3 py-2 text-sm",
           isUser
             ? "bg-ns-accent/20 text-ns-text"
-            : "bg-ns-surface/80 text-ns-text border border-ns-border"
+            : "bg-ns-surface/80 text-ns-text border border-ns-accent-2/50"
         )}
       >
         <p className="whitespace-pre-wrap break-words">{displayContent}</p>

@@ -80,6 +80,7 @@ export default function BentoGrid({
       >
         {visibleCards.map((config: BentoCardConfig) => (
           <Reorder.Item
+            as="div"
             key={config.id}
             value={config}
             className="min-h-0 cursor-grab active:cursor-grabbing"

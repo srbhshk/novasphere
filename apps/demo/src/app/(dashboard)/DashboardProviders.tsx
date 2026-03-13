@@ -8,6 +8,7 @@ import { usePathname } from "next/navigation";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AppShell } from "@novasphere/ui-shell";
 import type { TenantConfig } from "@novasphere/tenant-core";
+import ThemeSwitcher from "../../components/ThemeSwitcher";
 
 export type DashboardProvidersProps = {
   tenant: TenantConfig;
@@ -34,7 +35,12 @@ export default function DashboardProviders({
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AppShell tenant={tenant} currentPath={currentPath} title={title}>
+      <AppShell
+        tenant={tenant}
+        currentPath={currentPath}
+        title={title}
+        topbarRightSlot={<ThemeSwitcher />}
+      >
         {children}
       </AppShell>
     </QueryClientProvider>

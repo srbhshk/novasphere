@@ -9,7 +9,26 @@
     "incremental": true,
     "plugins": [{ "name": "next" }],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@/lib/utils": ["../../packages/ui-glass/src/lib/utils.ts"],
+      "@novasphere/tokens": ["../../packages/tokens/src/index.ts"],
+      "@novasphere/tokens/*": ["../../packages/tokens/src/*"],
+      "@novasphere/agent-core": ["../../packages/agent-core/src/index.ts"],
+      "@novasphere/agent-core/*": ["../../packages/agent-core/src/*"],
+      "@novasphere/tenant-core": ["../../packages/tenant-core/src/index.ts"],
+      "@novasphere/tenant-core/*": ["../../packages/tenant-core/src/*"],
+      "@novasphere/ui-glass": ["../../packages/ui-glass/src/index.ts"],
+      "@novasphere/ui-glass/*": ["../../packages/ui-glass/src/*"],
+      "@novasphere/ui-bento": ["../../packages/ui-bento/src/index.ts"],
+      "@novasphere/ui-bento/*": ["../../packages/ui-bento/src/*"],
+      "@novasphere/ui-charts": ["../../packages/ui-charts/src/index.ts"],
+      "@novasphere/ui-charts/*": ["../../packages/ui-charts/src/*"],
+      "@novasphere/ui-agent": ["../../packages/ui-agent/src/index.ts"],
+      "@novasphere/ui-agent/*": ["../../packages/ui-agent/src/*"],
+      "@novasphere/ui-auth": ["../../packages/ui-auth/src/index.ts"],
+      "@novasphere/ui-auth/*": ["../../packages/ui-auth/src/*"],
+      "@novasphere/ui-shell": ["../../packages/ui-shell/src/index.ts"],
+      "@novasphere/ui-shell/*": ["../../packages/ui-shell/src/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

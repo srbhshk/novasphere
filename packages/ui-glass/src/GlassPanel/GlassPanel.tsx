@@ -16,6 +16,8 @@ export type GlassPanelProps = {
   header?: React.ReactNode;
   /** Optional slot rendered below the main content. */
   footer?: React.ReactNode;
+  /** When true, allows content (e.g. dropdowns) to overflow the panel bounds. */
+  allowOverflow?: boolean;
 };
 
 export default function GlassPanel({
@@ -24,10 +26,16 @@ export default function GlassPanel({
   children,
   header,
   footer,
+  allowOverflow = false,
 }: GlassPanelProps): JSX.Element {
   return (
     <div
-      className={cn(styles.glassPanel, styles[variant], className)}
+      className={cn(
+        styles.glassPanel,
+        styles[variant],
+        allowOverflow && styles.allowOverflow,
+        className
+      )}
       role="region"
       aria-label="Panel"
     >

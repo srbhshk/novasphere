@@ -4,23 +4,35 @@
 .glassCard {
   position: relative;
   border: 1px solid var(--ns-color-border);
-  border-radius: var(--ns-radius-lg);
+  /* border-radius: var(--ns-radius-lg); */
   overflow: hidden;
 }
 
 .glassCard.subtle {
   background: var(--ns-glass-bg-subtle);
-  backdrop-filter: blur(var(--ns-blur-sm));
+  backdrop-filter: blur(var(--ns-blur-sm)) saturate(var(--ns-glass-saturate, 1.5))
+    contrast(var(--ns-glass-contrast, 1.08));
+  -webkit-backdrop-filter: blur(var(--ns-blur-sm))
+    saturate(var(--ns-glass-saturate, 1.5))
+    contrast(var(--ns-glass-contrast, 1.08));
 }
 
 .glassCard.medium {
   background: var(--ns-glass-bg-medium);
-  backdrop-filter: blur(var(--ns-blur-md));
+  backdrop-filter: blur(var(--ns-blur-md)) saturate(var(--ns-glass-saturate, 1.5))
+    contrast(var(--ns-glass-contrast, 1.08));
+  -webkit-backdrop-filter: blur(var(--ns-blur-md))
+    saturate(var(--ns-glass-saturate, 1.5))
+    contrast(var(--ns-glass-contrast, 1.08));
 }
 
 .glassCard.strong {
   background: var(--ns-glass-bg-strong);
-  backdrop-filter: blur(var(--ns-blur-lg));
+  backdrop-filter: blur(var(--ns-blur-lg)) saturate(var(--ns-glass-saturate, 1.5))
+    contrast(var(--ns-glass-contrast, 1.08));
+  -webkit-backdrop-filter: blur(var(--ns-blur-lg))
+    saturate(var(--ns-glass-saturate, 1.5))
+    contrast(var(--ns-glass-contrast, 1.08));
 }
 
 .glassCard.hoverable {

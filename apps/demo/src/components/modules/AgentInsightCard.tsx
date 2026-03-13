@@ -59,6 +59,20 @@ export default function AgentInsightCard({
   const typed = useTypewriter(lastAssistant?.content ?? "");
   const showSkeleton = !lastAssistant;
 
+  const handleChipSelect = (chip: SuggestionChip): void => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    window.dispatchEvent(
+      new CustomEvent("novasphere:copilot-open", {
+        detail: {
+          presetInput: chip.action,
+        },
+      })
+    );
+  };
+
   if (showSkeleton) {
     return (
       <div className="flex h-full flex-col rounded-xl border border-ns-border/60 bg-ns-surface/40 px-4 py-3">
@@ -93,7 +107,7 @@ export default function AgentInsightCard({
         {typed || insightText}
       </p>
       <div className="mt-3">
-        <SuggestionChips chips={SUGGESTION_CHIPS} onSelect={() => {}} />
+        <SuggestionChips chips={SUGGESTION_CHIPS} onSelect={handleChipSelect} />
       </div>
     </div>
   );

@@ -44,7 +44,10 @@ export default function ActivityFeedModule({
   return (
     <div className="flex h-full flex-col overflow-hidden p-4">
       <h3 className="text-sm font-semibold text-ns-text mb-3">{title}</h3>
-      <ul className="flex-1 overflow-y-auto space-y-3 pr-1 -mr-1" role="list">
+      <ul
+        className="flex-1 overflow-y-auto space-y-3 pr-1 -mr-1 list-none"
+        role="list"
+      >
         {MOCK_ACTIVITY.map((item) => {
           const Icon = ICON_MAP[item.icon] ?? Activity;
           return (

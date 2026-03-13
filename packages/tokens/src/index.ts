@@ -7,10 +7,10 @@ export { novaspherePreset } from "./tailwind.preset";
 /** Design token values as typed constants. Same values as CSS custom properties. */
 export const tokens = {
   color: {
-    bg: "#06080f",
-    surface: "#0c1120",
-    accent: "#4f8ef7",
-    accent2: "#a78bfa",
+    bg: "#020617",
+    surface: "#020617",
+    accent: "#f59e0b",
+    accent2: "#ec4899",
     accent3: "#34d399",
     text: "#e8ecf4",
     muted: "#6b7897",
@@ -20,11 +20,13 @@ export const tokens = {
   },
   glass: {
     bgSubtle: "rgba(255, 255, 255, 0.03)",
-    bgMedium: "rgba(255, 255, 255, 0.05)",
-    bgStrong: "rgba(255, 255, 255, 0.07)",
-    blurSm: "12px",
-    blurMd: "20px",
-    blurLg: "32px",
+    bgMedium: "rgba(255, 255, 255, 0.03)",
+    bgStrong: "rgba(255, 255, 255, 0.06)",
+    blurSm: "16px",
+    blurMd: "28px",
+    blurLg: "40px",
+    saturate: 2,
+    contrast: 1.1,
   },
   radius: {
     sm: "10px",
@@ -40,8 +42,11 @@ export const tokens = {
     durationSlow: "600ms",
   },
   glow: {
-    accent: "rgba(79, 142, 247, 0.35)",
-    accent2: "rgba(167, 139, 250, 0.25)",
+    accent: "rgba(245, 158, 11, 0.35)",
+    accent2: "rgba(236, 72, 153, 0.3)",
+  },
+  noise: {
+    opacity: 0.05,
   },
 } as const;
 

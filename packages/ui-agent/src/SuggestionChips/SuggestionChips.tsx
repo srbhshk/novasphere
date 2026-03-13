@@ -38,7 +38,7 @@ export default function SuggestionChips({
           className={cn(
             "shrink-0 rounded-full border border-ns-border bg-ns-surface/80 px-3 py-1.5",
             "text-xs font-medium text-ns-text transition-colors",
-            "hover:border-ns-border-hi hover:bg-white/5",
+            "hover:border-ns-accent-2/40 hover:bg-ns-accent-2/10",
             "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ns-border-hi"
           )}
         >

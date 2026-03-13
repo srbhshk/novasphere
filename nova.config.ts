@@ -21,9 +21,9 @@ export const novaConfig = {
     accentColor: '#4f8ef7', // primary brand colour
     accentColor2: '#a78bfa', // secondary
     accentColor3: '#34d399', // success / positive
-    glassBlur: 'md', // 'sm' | 'md' | 'lg'
-    borderRadius: 'lg', // 'sm' | 'md' | 'lg' | 'xl'
-    darkMode: true, // false = light mode default
+    glassBlur: 'lg', // 'sm' | 'md' | 'lg'
+    borderRadius: 'md', // 'sm' | 'md' | 'lg' | 'xl'
+    darkMode: false, // false = light mode default
   },
   agent: {
     adapter: 'auto', // 'auto'|'ollama'|'webllm'|'claude'|'openai'|'mock'

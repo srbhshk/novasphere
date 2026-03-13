@@ -10,6 +10,10 @@
   flex-direction: column;
 }
 
+.allowOverflow {
+  overflow: visible;
+}
+
 .glassPanel.subtle {
   background: var(--ns-glass-bg-subtle);
   backdrop-filter: blur(var(--ns-blur-sm));

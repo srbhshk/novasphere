@@ -6,7 +6,7 @@
   inset: 0;
   pointer-events: none;
   z-index: 1;
-  opacity: 0.035;
+  opacity: var(--ns-noise-opacity, 0.035);
 }
 
 .grainOverlayImage {

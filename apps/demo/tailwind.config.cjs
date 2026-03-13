@@ -1,7 +1,7 @@
-import type { Config } from "tailwindcss";
-import { novaspherePreset } from "@novasphere/tokens";
+/** @type {import('tailwindcss').Config} */
+const { novaspherePreset } = require("@novasphere/tokens");
 
-const config: Config = {
+module.exports = {
   presets: [novaspherePreset],
   content: [
     "./src/**/*.{js,ts,jsx,tsx,mdx}",
@@ -17,5 +17,3 @@ const config: Config = {
   },
   plugins: [],
 };
-
-export default config;
