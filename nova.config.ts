@@ -24,6 +24,8 @@ export const novaConfig = {
     glassBlur: 'lg', // 'sm' | 'md' | 'lg'
     borderRadius: 'md', // 'sm' | 'md' | 'lg' | 'xl'
     darkMode: false, // false = light mode default
+    /** Primary font family. Must match a key in the font registry (Corben, Inter, etc.). Default: Corben */
+    fontFamily: 'Corben',
   },
   agent: {
     adapter: 'auto', // 'auto'|'ollama'|'webllm'|'claude'|'openai'|'mock'

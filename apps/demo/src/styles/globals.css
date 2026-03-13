@@ -3,6 +3,7 @@
 
 /* Novasphere design tokens for Tailwind utilities */
 @theme {
+  --font-sans: var(--ns-font-sans, ui-sans-serif, system-ui, sans-serif);
   --color-ns-bg: var(--ns-color-bg);
   --color-ns-surface: var(--ns-color-surface);
   --color-ns-accent: var(--ns-color-accent);
