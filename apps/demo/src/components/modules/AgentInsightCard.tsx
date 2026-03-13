@@ -41,7 +41,7 @@ function useTypewriter(text: string, speedMs: number = 18): string {
 
 export default function AgentInsightCard({
   config,
-}: BentoCardModuleProps): JSX.Element {
+}: BentoCardModuleProps): React.ReactElement {
   const title = config.title ?? "Nova's Insight";
   const messages = useAgentStore((state) => state.messages);
   const lastAssistant = React.useMemo(

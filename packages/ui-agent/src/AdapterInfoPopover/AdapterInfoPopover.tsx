@@ -43,7 +43,7 @@ export default function AdapterInfoPopover({
   modelName,
   className,
   children,
-}: AdapterInfoPopoverProps): JSX.Element {
+}: AdapterInfoPopoverProps): React.ReactElement {
   const description = getAdapterDescription(adapterType);
 
   return (

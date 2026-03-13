@@ -84,7 +84,7 @@ export type DemoScriptOverlayProps = {
 
 export default function DemoScriptOverlay({
   onTriggerScenario,
-}: DemoScriptOverlayProps): JSX.Element | null {
+}: DemoScriptOverlayProps): React.ReactElement | null {
   const [index, setIndex] = React.useState(0);
   const [hidden, setHidden] = React.useState(false);
 

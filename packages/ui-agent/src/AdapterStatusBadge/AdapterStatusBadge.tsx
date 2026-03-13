@@ -2,6 +2,7 @@
 // @novasphere/ui-agent — AdapterStatusBadge
 // Shows current adapter state (coloured dot + label). Click opens AdapterInfoPopover.
 
+import type { ReactElement } from "react";
 import { cn } from "../lib/utils";
 import type { AgentStatus, AdapterType } from "@novasphere/agent-core";
 
@@ -74,7 +75,7 @@ export default function AdapterStatusBadge({
   downloadProgress,
   onInfoClick,
   className,
-}: AdapterStatusBadgeProps): JSX.Element {
+}: AdapterStatusBadgeProps): ReactElement {
   const label = getBadgeLabel(adapterType, status, modelName, downloadProgress);
   const dotColor = getDotColor(adapterType, status);
   const isClickable = typeof onInfoClick === "function";

@@ -2,6 +2,7 @@
 // @novasphere/ui-agent — SuggestionChips
 // Horizontal scrollable row of chip buttons. Chips disappear after one is selected.
 
+import type { ReactElement } from "react";
 import { cn } from "../lib/utils";
 import type { SuggestionChip } from "@novasphere/agent-core";
 
@@ -21,7 +22,7 @@ export default function SuggestionChips({
   chips,
   onSelect,
   className,
-}: SuggestionChipsProps): JSX.Element {
+}: SuggestionChipsProps): ReactElement {
   if (chips.length === 0) return <></>;
 
   return (

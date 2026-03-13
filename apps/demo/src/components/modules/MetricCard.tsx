@@ -3,6 +3,7 @@
 
 "use client";
 
+import * as React from "react";
 import type { BentoCardModuleProps } from "@novasphere/ui-bento";
 import { SparklineChart } from "@novasphere/ui-charts";
 import { useMetricsList } from "@/hooks/useMetricsList";
@@ -13,7 +14,7 @@ function cardIdToMetricId(cardId: string): string {
   return cardId.replace(/-metric$/, "") || cardId;
 }
 
-export default function MetricCard({ config }: BentoCardModuleProps): JSX.Element {
+export default function MetricCard({ config }: BentoCardModuleProps): React.ReactElement {
   const { data, isPending, isError } = useMetricsList();
   const metricId = cardIdToMetricId(config.id);
   const metric: DashboardMetric | undefined =

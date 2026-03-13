@@ -93,7 +93,7 @@ export default function CopilotPanel({
   agentName = "Nova",
   avatarEmoji = "🤖",
   className,
-}: CopilotPanelProps): JSX.Element {
+}: CopilotPanelProps): React.ReactElement {
   const [open, setOpen] = useState(initialOpen);
   const [input, setInput] = useState("");
   const [suggestions, setSuggestions] = useState<SuggestionChip[]>([]);

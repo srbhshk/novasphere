@@ -107,7 +107,7 @@ monorepo:
     "apps/demo":
       npm_name: null                    # Not published to npm — demo only
       description: >
-        The full novasphere demo application. A Next.js 14 App Router app
+        The full novasphere demo application. A Next.js 16 App Router app
         that imports and composes all packages. This is what you deploy to
         Vercel to demo. It is NOT a template to fork — it is proof that all
         packages work together. Teams fork individual packages, not this app.
@@ -121,7 +121,7 @@ monorepo:
         - "@novasphere/ui-auth"
         - "@novasphere/agent-core"
         - "@novasphere/tenant-core"
-      framework: Next.js 14 (App Router)
+      framework: Next.js 16 (App Router)
       deploys_to: Vercel
 
     # ── FOUNDATION PACKAGES (no UI, no React) ─────────────────────────────────
@@ -390,7 +390,7 @@ monorepo:
 
 stack:
   framework:
-    name: Next.js 14
+    name: Next.js 16
     scope: apps/demo only
     router: App Router (NOT Pages Router — never use pages/)
     rendering: >
@@ -714,7 +714,7 @@ structure: |
   │   ├── main.ts
   │   └── preview.ts
   ├── apps/
-  │   └── demo/                           # Next.js 14 demo application
+  │   └── demo/                           # Next.js 16 demo application
   │       ├── public/
   │       │   └── fonts/                  # Self-hosted fonts only
   │       ├── src/

@@ -3,6 +3,7 @@
 
 "use client";
 
+import * as React from "react";
 import {
   Zap,
   AlertTriangle,
@@ -39,7 +40,7 @@ function statusClass(status: ActivityItem["status"]): string {
 
 export default function ActivityFeedModule({
   config,
-}: BentoCardModuleProps): JSX.Element {
+}: BentoCardModuleProps): React.ReactElement {
   const title = config.title ?? "Activity";
   return (
     <div className="flex h-full flex-col overflow-hidden p-4">

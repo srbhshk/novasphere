@@ -44,7 +44,7 @@ const MODULE_REGISTRY: Record<string, React.ComponentType<BentoCardModuleProps>>
 /** When agent response contains this phrase, show the anomaly ContextBanner. */
 const ANOMALY_TRIGGER_PHRASE = "Signups dipped briefly";
 
-export default function DashboardPage(): JSX.Element {
+export default function DashboardPage(): React.ReactElement {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const isDemoMode = searchParams?.get("demo") === "true";
@@ -341,7 +341,7 @@ What would you like to investigate first?`,
           onLayoutChange={handleLayoutChange}
           onAgentResponse={handleAgentResponse}
           copilotRef={copilotRef}
-          onUserMessage={handleUserMessage}
+          {...(adapterType !== "mock" && { onUserMessage: handleUserMessage })}
         />
       )}
     </>

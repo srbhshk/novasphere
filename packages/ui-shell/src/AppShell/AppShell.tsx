@@ -30,7 +30,7 @@ export default function AppShell({
   title = "Dashboard1",
   sidebarUserSlot,
   topbarRightSlot,
-}: AppShellProps): JSX.Element {
+}: AppShellProps): React.ReactElement {
   const rootStyle = React.useMemo(
     () =>
       tenant.accentColor != null

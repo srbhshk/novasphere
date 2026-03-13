@@ -24,7 +24,7 @@ export default function GlassCard({
   children,
   asChild = false,
   highlight = false,
-}: GlassCardProps): JSX.Element {
+}: GlassCardProps): React.ReactElement {
   const Comp = asChild ? Slot : "div";
   return (
     <Comp

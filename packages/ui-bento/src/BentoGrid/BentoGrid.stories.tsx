@@ -2,11 +2,12 @@
 // @novasphere/ui-bento — BentoGrid stories
 
 import type { Meta, StoryObj } from "@storybook/react";
+import * as React from "react";
 import { useState } from "react";
 import BentoGrid from "./BentoGrid";
 import type { BentoLayoutConfig, BentoCardModuleProps } from "../bento.types";
 
-function PlaceholderModule({ config }: BentoCardModuleProps): JSX.Element {
+function PlaceholderModule({ config }: BentoCardModuleProps): React.ReactElement {
   return (
     <div className="p-4 text-white/90">
       <h3 className="font-medium">{config.title ?? config.moduleId}</h3>
@@ -95,7 +96,7 @@ export const MixedSpans: Story = {
   ],
 };
 
-function DragToReorderDemo(): JSX.Element {
+function DragToReorderDemo(): React.ReactElement {
   const [layout, setLayout] = useState<BentoLayoutConfig>(threeCardsLayout);
   return (
     <div className="p-6 w-full max-w-6xl">

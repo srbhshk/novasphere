@@ -1,7 +1,5 @@
-/* SPDX-License-Identifier: MIT */
-/* @novasphere/ui-glass — Tailwind 4 entry for shadcn CLI (consuming app imports tokens) */
-
-@import "@novasphere/tokens/tokens.css";
+/* Storybook — Tailwind 4 + novasphere tokens */
+@import "../packages/tokens/src/tokens.css";
 @import "tailwindcss";
 
 @theme {
@@ -22,4 +20,17 @@
   --blur-ns-sm: var(--ns-blur-sm);
   --blur-ns-md: var(--ns-blur-md);
   --blur-ns-lg: var(--ns-blur-lg);
+  --ease-ns-spring: var(--ns-ease-spring);
+  --ease-ns-smooth: var(--ns-ease-smooth);
+  --duration-ns-fast: var(--ns-duration-fast);
+  --duration-ns-base: var(--ns-duration-base);
+  --duration-ns-slow: var(--ns-duration-slow);
+}
+
+@layer base {
+  html,
+  body {
+    background: var(--ns-color-bg);
+    color: var(--ns-color-text);
+  }
 }

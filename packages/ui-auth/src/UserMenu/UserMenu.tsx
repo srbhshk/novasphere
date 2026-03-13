@@ -34,7 +34,7 @@ export default function UserMenu({
   session,
   adapter,
   className,
-}: UserMenuProps): JSX.Element {
+}: UserMenuProps): React.ReactElement {
   const [open, setOpen] = React.useState(false);
   const [signingOut, setSigningOut] = React.useState(false);
 

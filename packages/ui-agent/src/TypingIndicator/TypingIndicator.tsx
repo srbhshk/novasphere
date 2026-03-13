@@ -2,6 +2,7 @@
 // @novasphere/ui-agent — TypingIndicator
 // Three bouncing dots shown when the agent is thinking or streaming.
 
+import type { ReactElement } from "react";
 import { cn } from "../lib/utils";
 import styles from "./TypingIndicator.module.css";
 
@@ -19,7 +20,7 @@ export type TypingIndicatorProps = {
 export default function TypingIndicator({
   className,
   "aria-label": ariaLabel = "Agent is typing",
-}: TypingIndicatorProps): JSX.Element {
+}: TypingIndicatorProps): ReactElement {
   return (
     <div
       className={cn(styles.typingIndicator, className)}

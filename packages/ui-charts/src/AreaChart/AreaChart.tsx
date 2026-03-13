@@ -4,6 +4,7 @@
 
 "use client";
 
+import type { ReactElement } from "react";
 import {
   ResponsiveContainer,
   AreaChart as RechartsAreaChart,
@@ -41,7 +42,7 @@ export default function AreaChart({
   color = tokens.color.accent,
   loading = false,
   empty = false,
-}: AreaChartProps): JSX.Element {
+}: AreaChartProps): ReactElement {
   if (loading) {
     return (
       <GlassCard variant="medium">

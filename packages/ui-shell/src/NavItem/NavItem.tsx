@@ -2,6 +2,7 @@
 // @novasphere/ui-shell — NavItem
 // Renders nav link with icon and label. Active state uses accent glow. Tooltip when collapsed.
 
+import type { ReactElement } from "react";
 import type { TenantNavItem } from "@novasphere/tenant-core";
 import { getNavIcon } from "./nav-icons";
 import { cn } from "../lib/utils";
@@ -15,7 +16,7 @@ export type NavItemProps = {
 export default function NavItem({
   item,
   isCollapsed = false,
-}: NavItemProps): JSX.Element {
+}: NavItemProps): ReactElement {
   const Icon = getNavIcon(item.icon);
   const isActive = item.active === true;
   const content = (

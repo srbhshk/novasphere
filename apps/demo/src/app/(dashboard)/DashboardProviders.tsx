@@ -28,7 +28,7 @@ export default function DashboardProviders({
   tenant,
   children,
   title = "Dashboard",
-}: DashboardProvidersProps): JSX.Element {
+}: DashboardProvidersProps): React.ReactElement {
   const pathname = usePathname();
   const [queryClient] = React.useState(makeQueryClient);
   const currentPath = pathname ?? "/";

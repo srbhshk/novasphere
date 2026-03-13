@@ -12,7 +12,7 @@ export type ThemeProviderProps = {
 
 export default function ThemeProvider({
   children,
-}: ThemeProviderProps): JSX.Element {
+}: ThemeProviderProps): React.ReactElement {
   const themeId = useThemeStore((state) => state.themeId);
   const setTheme = useThemeStore((state) => state.setTheme);
 

@@ -3,11 +3,12 @@
 
 "use client";
 
+import * as React from "react";
 import type { BentoCardModuleProps } from "@novasphere/ui-bento";
 
 export default function GlobeModule({
   config,
-}: BentoCardModuleProps): JSX.Element {
+}: BentoCardModuleProps): React.ReactElement {
   const title = config.title ?? "Global Traffic";
 
   return (

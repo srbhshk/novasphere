@@ -27,7 +27,7 @@ export default function GlassPanel({
   header,
   footer,
   allowOverflow = false,
-}: GlassPanelProps): JSX.Element {
+}: GlassPanelProps): React.ReactElement {
   return (
     <div
       className={cn(

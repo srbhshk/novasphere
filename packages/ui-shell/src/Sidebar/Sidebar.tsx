@@ -19,7 +19,7 @@ export default function Sidebar({
   tenant,
   currentPath,
   userSlot,
-}: SidebarProps): JSX.Element {
+}: SidebarProps): React.ReactElement {
   const navItemsWithActive = tenant.navItems.map((item) => ({
     ...item,
     active: currentPath === item.href || currentPath.startsWith(`${item.href}/`),

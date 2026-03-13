@@ -20,7 +20,7 @@ const SCENARIOS: Array<{ id: string; label: string; message: string }> = [
 
 export default function DemoTriggerPanel({
   copilotRef,
-}: DemoTriggerPanelProps): JSX.Element {
+}: DemoTriggerPanelProps): React.ReactElement {
   const [open, setOpen] = React.useState(false);
   const [busy, setBusy] = React.useState(false);
 

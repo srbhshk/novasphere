@@ -4,6 +4,7 @@
 
 "use client";
 
+import type { ReactElement } from "react";
 import { useState } from "react";
 import {
   ResponsiveContainer,
@@ -49,7 +50,7 @@ function getSegmentColor(segment: DonutSegment, index: number): string {
 
 const ACTIVE_SCALE = 1.05;
 
-function renderActiveShape(props: unknown): JSX.Element {
+function renderActiveShape(props: unknown): ReactElement {
   const p = props as {
     cx: number;
     cy: number;
@@ -80,7 +81,7 @@ export default function DonutChart({
   size = DONUT_SIZE_DEFAULT,
   loading = false,
   empty = false,
-}: DonutChartProps): JSX.Element {
+}: DonutChartProps): ReactElement {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
   if (loading) {
