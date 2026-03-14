@@ -1,6 +1,15 @@
 @import "@novasphere/tokens/tokens.css";
 @import "tailwindcss";
 
+/*
+ * Tailwind 4 source configuration: scan UI packages for utility class names.
+ * Paths are relative to this stylesheet. The demo app is scanned by default;
+ * @novasphere/ui-* packages live outside the app, so we register them explicitly
+ * so grid, layout, and other Tailwind utilities used by BentoGrid and shared
+ * components are generated.
+ */
+@source "../../../../packages/ui-*/src/**/*.{ts,tsx,js,jsx}";
+
 /* Novasphere design tokens for Tailwind utilities */
 @theme {
   --font-sans: var(--ns-font-sans, ui-sans-serif, system-ui, sans-serif);
