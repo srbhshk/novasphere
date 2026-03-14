@@ -37,7 +37,21 @@ export default function Topbar({
       >
         <div className={styles.topbar}>
           <div className={styles.left}>
-            <span className={styles.tenantName}>{tenant.name}</span>
+            <div className={styles.logoWrap}>
+            {tenant.logoUrl ? (
+              <img
+                src={tenant.logoUrl}
+                alt=""
+                className={styles.logoImg}
+                aria-hidden
+              />
+            ) : (
+              <div className={styles.logoMark} aria-hidden>
+                {tenant.name.charAt(0)}
+              </div>
+            )}
+            </div> 
+            {/* <span className={styles.tenantName}>{tenant.name}</span> */}
             <span className={styles.separator} aria-hidden />
             <BreadcrumbBar items={items} />
           </div>
