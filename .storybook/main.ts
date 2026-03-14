@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 // novasphere — shared Storybook config (all packages)
 
+import tailwindcss from "@tailwindcss/vite";
 import type { StorybookConfig } from "@storybook/react-vite";
 
 const config: StorybookConfig = {
@@ -18,6 +19,11 @@ const config: StorybookConfig = {
   },
   docs: {
     autodocs: "tag",
+  },
+  viteFinal: (config) => {
+    config.plugins = config.plugins ?? [];
+    config.plugins.push(tailwindcss());
+    return config;
   },
 };
 

@@ -4,6 +4,7 @@
 
 "use client";
 
+import type { ReactElement } from "react";
 import { useState } from "react";
 import { GlassCard } from "@novasphere/ui-glass";
 import type { HeatmapCell } from "../chart.types";
@@ -43,7 +44,7 @@ export default function HeatmapChart({
   weeks = DEFAULT_WEEKS,
   loading = false,
   empty = false,
-}: HeatmapChartProps): JSX.Element {
+}: HeatmapChartProps): ReactElement {
   const [tooltip, setTooltip] = useState<{
     value: number;
     week: number;

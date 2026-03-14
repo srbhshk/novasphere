@@ -47,6 +47,16 @@ export function Dashboard() {
 | `BentoLayoutConfig`, `BentoCardConfig`, `BentoCardModuleProps`, `BentoColSpan`, `BentoRowSpan` | Types |
 | `BENTO_DEFAULT_COL_SPAN`, `BENTO_DEFAULT_ROW_SPAN` | Constants |
 
+## Tailwind configuration
+
+`BentoGrid` and other components use Tailwind utilities (e.g. `grid`, `grid-cols-*`, `gap-*`). Host apps must configure Tailwind to scan this package so those classes are generated. In the novasphere demo app, this is done via `@source` in `globals.css`:
+
+```css
+@source "../../../../packages/ui-*/src/**/*.{ts,tsx,js,jsx}";
+```
+
+If you install `@novasphere/ui-bento` into another app, add your UI package’s source path to Tailwind’s content/source configuration so layout utilities render correctly.
+
 ## Storybook
 
 [Storybook — ui-bento](https://github.com/your-org/novasphere#storybook) (run `pnpm storybook` from repo root; ui-bento on port 6003).

@@ -2,8 +2,7 @@
 // novasphere — shared Storybook preview (imports tokens)
 
 import type { Preview } from "@storybook/react";
-// Resolve tokens CSS from source so Storybook works without building packages
-import "../packages/tokens/src/tokens.css";
+import "./storybook.css";
 
 const preview: Preview = {
   parameters: {

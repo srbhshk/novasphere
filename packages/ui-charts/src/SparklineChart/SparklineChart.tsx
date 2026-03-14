@@ -4,6 +4,7 @@
 
 "use client";
 
+import type { ReactElement } from "react";
 import {
   ResponsiveContainer,
   LineChart,
@@ -40,7 +41,7 @@ export default function SparklineChart({
   height = SPARKLINE_HEIGHT_DEFAULT,
   loading = false,
   empty = false,
-}: SparklineChartProps): JSX.Element {
+}: SparklineChartProps): ReactElement {
   if (loading) {
     return (
       <GlassCard variant="medium">

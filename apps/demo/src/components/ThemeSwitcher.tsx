@@ -64,7 +64,7 @@ const getActiveTheme = (themeId: ThemeId): ThemeOption => {
   };
 };
 
-export default function ThemeSwitcher(): JSX.Element {
+export default function ThemeSwitcher(): React.ReactElement {
   const themeId = useThemeStore((state) => state.themeId);
   const setTheme = useThemeStore((state) => state.setTheme);
   const [open, setOpen] = React.useState(false);

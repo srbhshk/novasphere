@@ -19,9 +19,9 @@ Then open [http://localhost:3000](http://localhost:3000). The demo app runs at `
 ```
 novasphere/
 ├── apps/
-│   └── demo/                 # Next.js 14 App Router demo (not published)
+│   └── demo/                 # Next.js 16 App Router demo (not published)
 ├── packages/
-│   ├── tokens/               # @novasphere/tokens — design tokens, Tailwind preset
+│   ├── tokens/               # @novasphere/tokens — design tokens, Tailwind 4 @theme
 │   ├── agent-core/           # @novasphere/agent-core — AI adapter system
 │   ├── tenant-core/          # @novasphere/tenant-core — multi-tenancy
 │   ├── ui-glass/             # @novasphere/ui-glass — Liquid Glass components

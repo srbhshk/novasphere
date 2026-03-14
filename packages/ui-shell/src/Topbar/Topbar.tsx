@@ -23,7 +23,7 @@ export default function Topbar({
   title,
   breadcrumbs,
   rightSlot,
-}: TopbarProps): JSX.Element {
+}: TopbarProps): React.ReactElement {
   const items: BreadcrumbItem[] =
     breadcrumbs != null && breadcrumbs.length > 0
       ? breadcrumbs

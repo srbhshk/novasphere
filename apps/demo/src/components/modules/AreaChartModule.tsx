@@ -3,6 +3,7 @@
 
 "use client";
 
+import type React from "react";
 import { useState } from "react";
 import type { BentoCardModuleProps } from "@novasphere/ui-bento";
 import { AreaChart } from "@novasphere/ui-charts";
@@ -17,7 +18,7 @@ const TABS: Array<{ id: AreaChartRange; label: string }> = [
 
 export default function AreaChartModule({
   config,
-}: BentoCardModuleProps): JSX.Element {
+}: BentoCardModuleProps): React.ReactElement {
   const [range, setRange] = useState<AreaChartRange>("7D");
   const title = config.title ?? "Traffic";
   const data = AREA_CHART_DATA[range];

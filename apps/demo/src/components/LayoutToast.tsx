@@ -3,6 +3,7 @@
 
 "use client";
 
+import * as React from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { GlassCard } from "@novasphere/ui-glass";
 
@@ -14,12 +15,13 @@ export type LayoutToastProps = {
 export default function LayoutToast({
   message,
   onDismiss,
-}: LayoutToastProps): JSX.Element | null {
+}: LayoutToastProps): React.ReactElement | null {
   return (
     <AnimatePresence>
       {message && (
         <motion.div
           key="layout-toast"
+          data-testid="layout-restructure-toast"
           initial={{ opacity: 0, y: -8, scale: 0.98 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: -8, scale: 0.98 }}

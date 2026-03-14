@@ -2,6 +2,7 @@
 // @novasphere/ui-charts — ChartSkeleton
 // Loading placeholder at given dimensions for chart cards.
 
+import type { ReactElement } from "react";
 import styles from "./ChartSkeleton.module.css";
 
 export type ChartSkeletonProps = {
@@ -17,7 +18,7 @@ export default function ChartSkeleton({
   width = "100%",
   height,
   className,
-}: ChartSkeletonProps): JSX.Element {
+}: ChartSkeletonProps): ReactElement {
   return (
     <div
       className={className}

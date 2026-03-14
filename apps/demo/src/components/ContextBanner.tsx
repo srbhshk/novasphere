@@ -32,7 +32,7 @@ export default function ContextBanner({
   message,
   onDismiss,
   onInvestigate,
-}: ContextBannerProps): JSX.Element | null {
+}: ContextBannerProps): React.ReactElement | null {
   if (message === null || message === "") return null;
 
   return (

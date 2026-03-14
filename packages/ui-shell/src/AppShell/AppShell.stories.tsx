@@ -28,7 +28,7 @@ export const Default: Story = {
     title: "Dashboard",
     children: (
       <div style={{ padding: "1.5rem" }}>
-        <p>Main content area. Sidebar (72px) + main column with ambient background and grain.</p>
+        <p>Main content area. Full-width sticky header; sidebar (collapsed 72px, expands on hover); main fills remaining space.</p>
       </div>
     ),
   },

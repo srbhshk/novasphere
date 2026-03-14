@@ -24,7 +24,7 @@ export default function AuthGuard({
   adapter,
   children,
   fallback = null,
-}: AuthGuardProps): JSX.Element {
+}: AuthGuardProps): React.ReactElement {
   const [session, setSession] = React.useState<AuthSession | null | undefined>(undefined);
 
   React.useEffect(() => {

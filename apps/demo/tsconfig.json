@@ -10,6 +10,7 @@
     "plugins": [{ "name": "next" }],
     "paths": {
       "@/*": ["./src/*"],
+      "@nova/config": ["../../nova.config"],
       "@/lib/utils": ["../../packages/ui-glass/src/lib/utils.ts"],
       "@novasphere/tokens": ["../../packages/tokens/src/index.ts"],
       "@novasphere/tokens/*": ["../../packages/tokens/src/*"],

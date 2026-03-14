@@ -3,6 +3,7 @@
 
 "use client";
 
+import * as React from "react";
 import { AlertTriangle } from "lucide-react";
 import type { BentoCardModuleProps } from "@novasphere/ui-bento";
 
@@ -16,7 +17,7 @@ const DEFAULT_MESSAGE =
 
 export default function AnomalyBanner({
   config,
-}: BentoCardModuleProps): JSX.Element {
+}: BentoCardModuleProps): React.ReactElement {
   // Safe local extension of config for metadata without changing core BentoCardConfig.
   const extended = config as AnomalyBannerConfig;
   const message = extended.anomalyMessage ?? DEFAULT_MESSAGE;

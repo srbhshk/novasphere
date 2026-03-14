@@ -2,6 +2,7 @@
 // @novasphere/ui-shell — BreadcrumbBar
 // Renders a list of breadcrumb links. Last item is current page (no link).
 
+import type { ReactElement } from "react";
 import { cn } from "../lib/utils";
 import styles from "./BreadcrumbBar.module.css";
 
@@ -18,7 +19,7 @@ export type BreadcrumbBarProps = {
 export default function BreadcrumbBar({
   items,
   className,
-}: BreadcrumbBarProps): JSX.Element {
+}: BreadcrumbBarProps): ReactElement {
   if (items.length === 0) return <nav aria-label="Breadcrumb" />;
 
   return (

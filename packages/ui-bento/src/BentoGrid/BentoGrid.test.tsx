@@ -1,12 +1,13 @@
 // SPDX-License-Identifier: MIT
 // @novasphere/ui-bento — BentoGrid tests
 
+import * as React from "react";
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import BentoGrid from "./BentoGrid";
 import type { BentoLayoutConfig, BentoCardModuleProps } from "../bento.types";
 
-function DummyModule({ config }: BentoCardModuleProps): JSX.Element {
+function DummyModule({ config }: BentoCardModuleProps): React.ReactElement {
   return <span data-testid={`module-${config.id}`}>{config.id}</span>;
 }
 

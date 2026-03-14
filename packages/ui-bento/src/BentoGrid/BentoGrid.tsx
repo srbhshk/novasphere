@@ -33,7 +33,7 @@ export default function BentoGrid({
   modules,
   onReorder,
   className,
-}: BentoGridProps): JSX.Element {
+}: BentoGridProps): React.ReactElement {
   const visibleCards = React.useMemo(
     () =>
       [...layout]

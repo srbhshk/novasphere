@@ -2,6 +2,7 @@
 // @novasphere/ui-agent — AgentMessage
 // Renders user (right) and assistant (left) bubbles with optional streaming cursor.
 
+import type { ReactElement } from "react";
 import { cn } from "../lib/utils";
 import type { AgentMessage as AgentMessageType } from "@novasphere/agent-core";
 import styles from "./AgentMessage.module.css";
@@ -32,7 +33,7 @@ export default function AgentMessage({
   isStreaming = false,
   streamingContent,
   className,
-}: AgentMessageProps): JSX.Element {
+}: AgentMessageProps): ReactElement {
   const isUser = message.role === "user";
   const time = formatTime(message.timestamp);
   const displayContent =

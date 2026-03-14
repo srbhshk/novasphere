@@ -30,7 +30,7 @@ export default function LoginForm({
   adapter,
   onSuccess,
   className,
-}: LoginFormProps): JSX.Element {
+}: LoginFormProps): React.ReactElement {
   const [showPassword, setShowPassword] = React.useState(false);
   const [submitError, setSubmitError] = React.useState<string | null>(null);
 

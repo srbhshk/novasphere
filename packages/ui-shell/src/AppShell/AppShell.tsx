@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // @novasphere/ui-shell — AppShell
-// Dashboard shell: grid layout (sidebar + main), ambient background, grain, tenant accent override.
+// Dashboard shell: full-width sticky header, left sidebar (expand on hover), main fills remaining area.
 
 "use client";
 
@@ -27,17 +27,26 @@ export default function AppShell({
   tenant,
   children,
   currentPath,
-  title = "Dashboard1",
+  title = "Dashboard",
   sidebarUserSlot,
   topbarRightSlot,
-}: AppShellProps): JSX.Element {
+}: AppShellProps): React.ReactElement {
+  const [sidebarExpanded, setSidebarExpanded] = React.useState(false);
   const rootStyle = React.useMemo(
     () =>
       tenant.accentColor != null
-               ? ({ "--ns-color-accent": tenant.accentColor } as React.CSSProperties)
+        ? ({ "--ns-color-accent": tenant.accentColor } as React.CSSProperties)
         : undefined,
     [tenant.accentColor]
   );
+
+  const handleSidebarMouseEnter = React.useCallback(() => {
+    setSidebarExpanded(true);
+  }, []);
+
+  const handleSidebarMouseLeave = React.useCallback(() => {
+    setSidebarExpanded(false);
+  }, []);
 
   return (
     <div className={styles.root} style={rootStyle}>
@@ -47,13 +56,6 @@ export default function AppShell({
       <div className={styles.grainLayer} aria-hidden>
         <GrainOverlay />
       </div>
-      <div className={styles.sidebarArea}>
-        <Sidebar
-          tenant={tenant}
-          currentPath={currentPath}
-          userSlot={sidebarUserSlot}
-        />
-      </div>
       <div className={styles.topbarArea}>
         <Topbar
           tenant={tenant}
@@ -61,7 +63,23 @@ export default function AppShell({
           rightSlot={topbarRightSlot}
         />
       </div>
-      <main className={styles.main}>{children}</main>
+      <div className={styles.contentRow}>
+        <div
+          className={styles.sidebarArea}
+          onMouseEnter={handleSidebarMouseEnter}
+          onMouseLeave={handleSidebarMouseLeave}
+        >
+          <Sidebar
+            tenant={tenant}
+            currentPath={currentPath}
+            userSlot={sidebarUserSlot}
+            expanded={sidebarExpanded}
+          />
+        </div>
+        <main className={styles.main} id="main-content">
+          {children}
+        </main>
+      </div>
     </div>
   );
 }

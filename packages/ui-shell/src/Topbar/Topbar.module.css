@@ -1,8 +1,11 @@
 /* SPDX-License-Identifier: MIT */
-/* @novasphere/ui-shell — Topbar layout */
+/* @novasphere/ui-shell — Topbar layout: full width, works inside sticky wrapper */
 
 .topbarRoot {
   width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 }
 
 .topbarPanel {
@@ -50,4 +53,16 @@
   align-items: center;
   gap: 0.75rem;
   flex-shrink: 0;
+}
+
+@media (max-width: 640px) {
+  .topbar {
+    padding: 0.5rem 0.75rem;
+    min-height: 3rem;
+  }
+
+  .left {
+    gap: 0.5rem;
+    min-width: 0;
+  }
 }

@@ -84,19 +84,16 @@ export type DemoScriptOverlayProps = {
 
 export default function DemoScriptOverlay({
   onTriggerScenario,
-}: DemoScriptOverlayProps): JSX.Element | null {
+}: DemoScriptOverlayProps): React.ReactElement | null {
   const [index, setIndex] = React.useState(0);
   const [hidden, setHidden] = React.useState(false);
+  const [mounted, setMounted] = React.useState(false);
 
-  const isBrowser = typeof window !== "undefined";
-  if (!isBrowser) return null;
-
-  const params = new URLSearchParams(window.location.search);
-  const isDemo = params.get("demo") === "true";
-  if (!isDemo) return null;
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const current = DEMO_SCRIPT[index] ?? DEMO_SCRIPT[0];
-  if (!current) return null;
 
   const goPrev = React.useCallback(() => {
     setIndex((prev) => (prev > 0 ? prev - 1 : prev));
@@ -131,6 +128,14 @@ export default function DemoScriptOverlay({
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
   }, [goNext, goPrev, trigger]);
+
+  if (!mounted) return null;
+
+  const params = new URLSearchParams(window.location.search);
+  const isDemo = params.get("demo") === "true";
+  if (!isDemo) return null;
+
+  if (!current) return null;
 
   return (
     <div

@@ -1,8 +1,41 @@
 @import "@novasphere/tokens/tokens.css";
+@import "tailwindcss";
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/*
+ * Tailwind 4 source configuration: scan UI packages for utility class names.
+ * Paths are relative to this stylesheet. The demo app is scanned by default;
+ * @novasphere/ui-* packages live outside the app, so we register them explicitly
+ * so grid, layout, and other Tailwind utilities used by BentoGrid and shared
+ * components are generated.
+ */
+@source "../../../../packages/ui-*/src/**/*.{ts,tsx,js,jsx}";
+
+/* Novasphere design tokens for Tailwind utilities */
+@theme {
+  --font-sans: var(--ns-font-sans, ui-sans-serif, system-ui, sans-serif);
+  --color-ns-bg: var(--ns-color-bg);
+  --color-ns-surface: var(--ns-color-surface);
+  --color-ns-accent: var(--ns-color-accent);
+  --color-ns-accent-2: var(--ns-color-accent-2);
+  --color-ns-accent-3: var(--ns-color-accent-3);
+  --color-ns-text: var(--ns-color-text);
+  --color-ns-muted: var(--ns-color-muted);
+  --color-ns-danger: var(--ns-color-danger);
+  --color-ns-border: var(--ns-color-border);
+  --color-ns-border-hi: var(--ns-color-border-hi);
+  --radius-ns-sm: var(--ns-radius-sm);
+  --radius-ns-md: var(--ns-radius-md);
+  --radius-ns-lg: var(--ns-radius-lg);
+  --radius-ns-xl: var(--ns-radius-xl);
+  --blur-ns-sm: var(--ns-blur-sm);
+  --blur-ns-md: var(--ns-blur-md);
+  --blur-ns-lg: var(--ns-blur-lg);
+  --ease-ns-spring: var(--ns-ease-spring);
+  --ease-ns-smooth: var(--ns-ease-smooth);
+  --duration-ns-fast: var(--ns-duration-fast);
+  --duration-ns-base: var(--ns-duration-base);
+  --duration-ns-slow: var(--ns-duration-slow);
+}
 
 /* Apply token background so the app uses Liquid Glass base before shell mounts */
 @layer base {

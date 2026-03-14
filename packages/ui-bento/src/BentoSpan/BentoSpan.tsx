@@ -23,7 +23,7 @@ export default function BentoSpan({
   rowSpan = 1,
   children,
   className,
-}: BentoSpanProps): JSX.Element {
+}: BentoSpanProps): React.ReactElement {
   return (
     <div
       className={cn("min-h-0", className)}

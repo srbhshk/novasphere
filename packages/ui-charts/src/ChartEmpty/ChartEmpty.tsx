@@ -2,6 +2,7 @@
 // @novasphere/ui-charts — ChartEmpty
 // Empty state message for charts when no data.
 
+import type { ReactElement } from "react";
 import { cn } from "../lib/utils";
 
 export type ChartEmptyProps = {
@@ -14,7 +15,7 @@ export type ChartEmptyProps = {
 export default function ChartEmpty({
   className,
   message = "No data",
-}: ChartEmptyProps): JSX.Element {
+}: ChartEmptyProps): ReactElement {
   return (
     <div
       className={cn(

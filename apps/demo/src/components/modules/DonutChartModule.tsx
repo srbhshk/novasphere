@@ -3,6 +3,7 @@
 
 "use client";
 
+import type React from "react";
 import { useState } from "react";
 import type { BentoCardModuleProps } from "@novasphere/ui-bento";
 import { DonutChart } from "@novasphere/ui-charts";
@@ -36,7 +37,7 @@ const SEGMENTS: Record<DonutTabId, DonutSegment[]> = {
 
 export default function DonutChartModule({
   config,
-}: BentoCardModuleProps): JSX.Element {
+}: BentoCardModuleProps): React.ReactElement {
   const [tab, setTab] = useState<DonutTabId>("usage");
   const title = config.title ?? "Donut breakdown";
 

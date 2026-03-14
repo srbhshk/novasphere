@@ -27,7 +27,7 @@ export default function BentoCard({
   config,
   children,
   isDragging = false,
-}: BentoCardProps): JSX.Element {
+}: BentoCardProps): React.ReactElement {
   return (
     <GlassCard variant="medium" className={cn(styles.bentoCard, isDragging && styles.dragging)}>
       <div data-bento-card-id={config.id} className="h-full min-h-0 flex flex-col">
