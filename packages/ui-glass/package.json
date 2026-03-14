@@ -1,6 +1,7 @@
 {
   "name": "@novasphere/ui-glass",
   "version": "0.0.1",
+  "sideEffects": false,
   "description": "Liquid Glass component system. The core visual aesthetic of novasphere. Contains GlassCard, GlassPanel, GlassModal, the ambient background layer, and the grain overlay.",
   "license": "MIT",
   "author": "novasphere contributors",

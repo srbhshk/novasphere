@@ -25,6 +25,8 @@ import AreaChartModule from "@/components/modules/AreaChartModule";
 import AnomalyBanner from "@/components/modules/AnomalyBanner";
 import AgentInsightCard from "@/components/modules/AgentInsightCard";
 import DonutChartModule from "@/components/modules/DonutChartModule";
+import HeatmapModule from "@/components/modules/HeatmapModule";
+import QuotaModule from "@/components/modules/QuotaModule";
 import GlobeModule from "@/components/modules/GlobeModule";
 import ContextBanner from "@/components/ContextBanner";
 import LayoutToast from "@/components/LayoutToast";
@@ -38,6 +40,8 @@ const MODULE_REGISTRY: Record<string, React.ComponentType<BentoCardModuleProps>>
   AnomalyBanner,
   AgentInsightCard,
   DonutChartModule,
+  HeatmapModule,
+  QuotaModule,
   GlobeModule,
 };
 

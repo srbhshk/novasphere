@@ -9,7 +9,7 @@
 .bentoCard.dragging {
   cursor: grabbing;
   transform: scale(1.02);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+  box-shadow: var(--ns-shadow-elevated);
 }
 
 @media (prefers-reduced-motion: no-preference) {

@@ -47,6 +47,34 @@
   --ns-glow-accent: rgba(245, 158, 11, 0.35);
   --ns-glow-accent-2: rgba(236, 72, 153, 0.3);
 
+  /* ── SHADOW TOKENS ──────────────────────────────────────────────────── */
+  --ns-shadow-card: 0 4px 24px rgba(0, 0, 0, 0.25);
+  --ns-shadow-card-hover: 0 8px 32px rgba(0, 0, 0, 0.35);
+  --ns-shadow-sidebar: 1px 0 0 rgba(255, 255, 255, 0.06);
+  --ns-shadow-sidebar-expanded: 16px 0 32px rgba(0, 0, 0, 0.35),
+    8px 0 16px rgba(0, 0, 0, 0.2),
+    0 0 0 1px rgba(255, 255, 255, 0.06) inset;
+  --ns-shadow-topbar: 0 1px 0 rgba(255, 255, 255, 0.06);
+  --ns-shadow-panel: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  --ns-shadow-elevated: 0 12px 40px rgba(0, 0, 0, 0.35);
+  --ns-shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+
+  /* ── GLASS HIGHLIGHT ─────────────────────────────────────────────────── */
+  --ns-glass-highlight: rgba(255, 255, 255, 0.08);
+  --ns-glass-sheen: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, transparent 50%);
+
+  /* ── AMBIENT (AmbientBackground) ─────────────────────────────────────── */
+  --ns-ambient-bg: #020617;
+  --ns-ambient-orb-1: rgba(79, 142, 247, 0.15);
+  --ns-ambient-orb-2: rgba(167, 139, 250, 0.12);
+  --ns-ambient-orb-3: rgba(52, 211, 153, 0.08);
+
+  /* ── ACCENT OPACITY VARIANTS (hover / focus) ─────────────────────────── */
+  --ns-color-accent-10: rgba(79, 142, 247, 0.10);
+  --ns-color-accent-20: rgba(79, 142, 247, 0.20);
+  --ns-color-accent-2-20: rgba(167, 139, 250, 0.20);
+  --ns-color-danger-20: rgba(249, 115, 22, 0.20);
+
   /* ── NOISE ──────────────────────────────────────────────────────────── */
   /* Spectral Edge: 0.05 opacity (hides gradient banding) */
   --ns-noise-opacity: 0.05;
@@ -84,6 +112,7 @@
 
   /* Noise Texture: 0.02 opacity */
   --ns-noise-opacity: 0.02;
+  --ns-ambient-bg: #e0e7ff;
 }
 
 /* 2. Subnet Deep (Dark / Pro Mode) */
@@ -116,6 +145,7 @@
 
   /* Noise Texture: 0.04 opacity (monochrome grain) */
   --ns-noise-opacity: 0.04;
+  --ns-ambient-bg: #020617;
 }
 
 /* 3. Spectral Edge (Default / Brand Theme) — explicit attribute override */

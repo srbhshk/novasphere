@@ -1,6 +1,7 @@
 {
   "name": "@novasphere/ui-agent",
   "version": "0.0.1",
+  "sideEffects": false,
   "description": "Copilot Panel UI. The visual layer of the agent system. Contains CopilotPanel, AgentMessage, SuggestionChips, TypingIndicator, AdapterStatusBadge, and AdapterInfoPopover.",
   "license": "MIT",
   "author": "novasphere contributors",

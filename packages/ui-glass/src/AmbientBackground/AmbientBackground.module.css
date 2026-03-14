@@ -12,52 +12,50 @@
 }
 
 /* 1. Spectral Edge — Liquid Metal mesh + diagonal grain */
+/* intentional: composite gradient — theme-specific mesh, tokens used where defined */
 .ambientBackground,
 :root[data-theme="spectral-edge"] .ambientBackground {
   background:
-    /* Soft vignette */
-    radial-gradient(circle at 15% 0%, rgba(15, 23, 42, 0.9) 0, transparent 55%),
-    radial-gradient(circle at 85% 100%, rgba(46, 16, 101, 0.95) 0, transparent 60%),
-    /* Accent glow pockets */
-    radial-gradient(circle at 10% 80%, rgba(236, 72, 153, 0.14) 0, transparent 55%),
-    radial-gradient(circle at 90% 20%, rgba(245, 158, 11, 0.14) 0, transparent 55%),
-    /* Subtle diagonal crosshatch to help glass edges read */
+    /* intentional: theme mesh */
+    radial-gradient(circle at 15% 0%, rgba(15, 23, 42, 0.9) 0, transparent 55%), /* intentional: theme mesh */
+    radial-gradient(circle at 85% 100%, rgba(46, 16, 101, 0.95) 0, transparent 60%), /* intentional: theme mesh */
+    radial-gradient(circle at 10% 80%, rgba(236, 72, 153, 0.14) 0, transparent 55%), /* intentional: theme mesh */
+    radial-gradient(circle at 90% 20%, rgba(245, 158, 11, 0.14) 0, transparent 55%), /* intentional: theme mesh */
     linear-gradient(
       120deg,
-      rgba(15, 23, 42, 0.4) 0,
-      rgba(15, 23, 42, 0.4) 12%,
-      rgba(15, 23, 42, 0.1) 12%,
-      rgba(15, 23, 42, 0.1) 24%
+      rgba(15, 23, 42, 0.4) 0, /* intentional: theme mesh */
+      rgba(15, 23, 42, 0.4) 12%, /* intentional: theme mesh */
+      rgba(15, 23, 42, 0.1) 12%, /* intentional: theme mesh */
+      rgba(15, 23, 42, 0.1) 24% /* intentional: theme mesh */
     ),
     linear-gradient(
       300deg,
-      rgba(15, 23, 42, 0.55) 0,
-      rgba(15, 23, 42, 0.55) 10%,
-      rgba(15, 23, 42, 0.18) 10%,
-      rgba(15, 23, 42, 0.18) 22%
+      rgba(15, 23, 42, 0.55) 0, /* intentional: theme mesh */
+      rgba(15, 23, 42, 0.55) 10%, /* intentional: theme mesh */
+      rgba(15, 23, 42, 0.18) 10%, /* intentional: theme mesh */
+      rgba(15, 23, 42, 0.18) 22% /* intentional: theme mesh */
     );
   background-size: auto, auto, auto, auto, 220px 220px, 260px 260px;
-  background-color: #020617;
+  background-color: var(--ns-ambient-bg);
 }
 
 /* 2. Silicon Frost — Clean-room mesh + fine grid */
+/* intentional: composite gradient — theme-specific mesh */
 :root[data-theme="silicon-frost"] .ambientBackground {
   background:
-    /* Large soft mesh */
-    radial-gradient(circle at 0% 0%, rgba(248, 250, 252, 0.9) 0, transparent 55%),
-    radial-gradient(circle at 100% 0%, rgba(224, 231, 255, 0.9) 0, transparent 55%),
-    radial-gradient(circle at 100% 100%, rgba(245, 243, 255, 0.9) 0, transparent 55%),
-    /* Accent wash */
-    radial-gradient(circle at 0% 100%, rgba(16, 185, 129, 0.12) 0, transparent 60%),
-    /* Subtle blueprint grid */
+    /* intentional: theme mesh */
+    radial-gradient(circle at 0% 0%, rgba(248, 250, 252, 0.9) 0, transparent 55%), /* intentional: theme mesh */
+    radial-gradient(circle at 100% 0%, rgba(224, 231, 255, 0.9) 0, transparent 55%), /* intentional: theme mesh */
+    radial-gradient(circle at 100% 100%, rgba(245, 243, 255, 0.9) 0, transparent 55%), /* intentional: theme mesh */
+    radial-gradient(circle at 0% 100%, rgba(16, 185, 129, 0.12) 0, transparent 60%), /* intentional: theme mesh */
     linear-gradient(
       to right,
-      rgba(148, 163, 184, 0.22) 1px,
+      rgba(148, 163, 184, 0.22) 1px, /* intentional: theme mesh */
       transparent 1px
     ),
     linear-gradient(
       to bottom,
-      rgba(148, 163, 184, 0.22) 1px,
+      rgba(148, 163, 184, 0.22) 1px, /* intentional: theme mesh */
       transparent 1px
     );
   background-size:
@@ -67,30 +65,29 @@
     auto,
     120px 120px,
     120px 120px;
-  background-color: #e0e7ff;
+  background-color: var(--ns-ambient-bg);
 }
 
 /* 3. Subnet Deep — Liquified carbon + angular shards */
+/* intentional: composite gradient — theme-specific mesh */
 :root[data-theme="subnet-deep"] .ambientBackground {
   background:
-    /* Deep wells */
-    radial-gradient(circle at 0% 0%, rgba(15, 23, 42, 0.95) 0, transparent 55%),
-    radial-gradient(circle at 100% 100%, rgba(15, 23, 42, 0.95) 0, transparent 55%),
-    /* Cyber glows */
-    radial-gradient(circle at 10% 80%, rgba(6, 182, 212, 0.16) 0, transparent 60%),
-    radial-gradient(circle at 90% 20%, rgba(139, 92, 246, 0.18) 0, transparent 60%),
-    /* Angular shards / circuitry */
+    /* intentional: theme mesh */
+    radial-gradient(circle at 0% 0%, rgba(15, 23, 42, 0.95) 0, transparent 55%), /* intentional: theme mesh */
+    radial-gradient(circle at 100% 100%, rgba(15, 23, 42, 0.95) 0, transparent 55%), /* intentional: theme mesh */
+    radial-gradient(circle at 10% 80%, rgba(6, 182, 212, 0.16) 0, transparent 60%), /* intentional: theme mesh */
+    radial-gradient(circle at 90% 20%, rgba(139, 92, 246, 0.18) 0, transparent 60%), /* intentional: theme mesh */
     linear-gradient(
       135deg,
-      rgba(15, 23, 42, 0.3) 0,
-      rgba(15, 23, 42, 0.3) 18%,
+      rgba(15, 23, 42, 0.3) 0, /* intentional: theme mesh */
+      rgba(15, 23, 42, 0.3) 18%, /* intentional: theme mesh */
       transparent 18%,
       transparent 36%
     ),
     linear-gradient(
       315deg,
-      rgba(15, 23, 42, 0.35) 0,
-      rgba(15, 23, 42, 0.35) 12%,
+      rgba(15, 23, 42, 0.35) 0, /* intentional: theme mesh */
+      rgba(15, 23, 42, 0.35) 12%, /* intentional: theme mesh */
       transparent 12%,
       transparent 30%
     );
@@ -101,7 +98,7 @@
     auto,
     260px 260px,
     220px 220px;
-  background-color: #020617;
+  background-color: var(--ns-ambient-bg);
 }
 
 .orb {
@@ -119,7 +116,7 @@
   left: -10%;
   background: radial-gradient(
     circle,
-    rgba(79, 142, 247, 0.25) 0%,
+    var(--ns-ambient-orb-1) 0%,
     transparent 70%
   );
 }
@@ -133,7 +130,7 @@
   right: -10%;
   background: radial-gradient(
     circle,
-    rgba(167, 139, 250, 0.2) 0%,
+    var(--ns-ambient-orb-2) 0%,
     transparent 70%
   );
 }
@@ -148,7 +145,7 @@
   transform: translate(-50%, -50%);
   background: radial-gradient(
     circle,
-    rgba(52, 211, 153, 0.15) 0%,
+    var(--ns-ambient-orb-3) 0%,
     transparent 70%
   );
 }

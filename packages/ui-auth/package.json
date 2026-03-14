@@ -1,6 +1,7 @@
 {
   "name": "@novasphere/ui-auth",
   "version": "0.0.1",
+  "sideEffects": false,
   "description": "Authentication UI components. Provider-agnostic — the UI is decoupled from the auth implementation. Contains LoginForm, SignupForm, ForgotPasswordForm, UserMenu, AuthGuard, and TenantSwitcher.",
   "license": "MIT",
   "author": "novasphere contributors",

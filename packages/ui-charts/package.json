@@ -1,6 +1,7 @@
 {
   "name": "@novasphere/ui-charts",
   "version": "0.0.1",
+  "sideEffects": false,
   "description": "Chart component wrappers. Glass-styled Recharts components: SparklineChart, DonutChart, AreaChart, HeatmapChart. Each accepts typed data props and handles loading/empty/error states internally.",
   "license": "MIT",
   "author": "novasphere contributors",

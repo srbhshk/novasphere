@@ -7,7 +7,7 @@ import * as React from "react";
 import { usePathname } from "next/navigation";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AppShell } from "@novasphere/ui-shell";
-import type { TenantConfig } from "@novasphere/tenant-core";
+import { getBreadcrumbs, type TenantConfig } from "@novasphere/tenant-core";
 import ThemeSwitcher from "../../components/ThemeSwitcher";
 
 export type DashboardProvidersProps = {
@@ -32,6 +32,10 @@ export default function DashboardProviders({
   const pathname = usePathname();
   const [queryClient] = React.useState(makeQueryClient);
   const currentPath = pathname ?? "/";
+  const breadcrumbs = React.useMemo(
+    () => getBreadcrumbs(currentPath, tenant, title),
+    [currentPath, tenant, title]
+  );
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -39,6 +43,7 @@ export default function DashboardProviders({
         tenant={tenant}
         currentPath={currentPath}
         title={title}
+        breadcrumbs={breadcrumbs}
         topbarRightSlot={<ThemeSwitcher />}
       >
         {children}

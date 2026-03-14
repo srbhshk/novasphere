@@ -102,6 +102,12 @@ Tenants are defined in `@novasphere/tenant-core`. For the static registry:
 
 ---
 
+## Adding navigation and menu options
+
+To add or change navigation and menu options, update the tenant registry: edit `navItems` (and optionally `children` for second-level pages) in `packages/tenant-core/src/tenant.registry.ts`. Breadcrumbs are computed automatically from the current path and support up to two levels. You do not need to wire breadcrumbs per route or per layout. See **@novasphere/ui-shell** README, section “Navigation and breadcrumbs”, for details.
+
+---
+
 ## Commit format
 
 Use [Conventional Commits](https://www.conventionalcommits.org/):

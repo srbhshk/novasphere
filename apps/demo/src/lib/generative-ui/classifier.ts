@@ -29,6 +29,11 @@ type OllamaChatResponse = {
   choices?: OllamaChatChoice[];
 };
 
+function isOllamaChatResponse(val: unknown): val is OllamaChatResponse {
+  const v = val as Record<string, unknown>;
+  return Array.isArray(v?.choices) && v.choices.length > 0;
+}
+
 /**
  * Human-readable layout descriptions used to explain what Nova changed.
  */
@@ -74,14 +79,12 @@ async function callOllama(request: OllamaChatRequest): Promise<string | null> {
     }
 
     const data: unknown = await response.json();
-    const parsed = data as OllamaChatResponse;
+    if (!isOllamaChatResponse(data)) {
+      return null;
+    }
+    const raw = data.choices?.[0]?.message?.content;
     const content =
-      parsed.choices &&
-      parsed.choices[0] &&
-      parsed.choices[0].message &&
-      typeof parsed.choices[0].message.content === "string"
-        ? parsed.choices[0].message.content
-        : null;
+      typeof raw === "string" ? raw : null;
 
     return content !== null ? content.trim() : null;
   } catch {

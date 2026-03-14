@@ -27,3 +27,22 @@ export const Default: Story = {
     title: "Dashboard",
   },
 };
+
+export const WithBreadcrumbsOneLevel: Story = {
+  args: {
+    tenant: demoTenant,
+    title: "Dashboard",
+    breadcrumbs: [{ label: "Analytics" }],
+  },
+};
+
+export const WithBreadcrumbsTwoLevels: Story = {
+  args: {
+    tenant: demoTenant,
+    title: "Dashboard",
+    breadcrumbs: [
+      { label: "Settings", href: "/demo/settings" },
+      { label: "API Keys" },
+    ],
+  },
+};

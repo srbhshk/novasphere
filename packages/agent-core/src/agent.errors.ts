@@ -38,6 +38,15 @@ export class AgentParseError extends AgentError {
   }
 }
 
+/** Thrown when a chat or stream request exceeds the configured timeout. */
+export class AgentTimeoutError extends AgentError {
+  readonly name = 'AgentTimeoutError';
+  constructor(message: string) {
+    super(message);
+    Object.setPrototypeOf(this, AgentTimeoutError.prototype);
+  }
+}
+
 /** Thrown when WebGPU is not available (e.g. browser without WebGPU support). */
 export class WebGPUNotSupportedError extends AgentError {
   constructor(message: string = 'WebGPU is not supported', options?: ErrorOptions) {

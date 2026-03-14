@@ -49,10 +49,6 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.08) 0%,
-    transparent 50%
-  );
+  background: var(--ns-glass-sheen);
   pointer-events: none;
 }
