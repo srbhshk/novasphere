@@ -13,12 +13,15 @@ export type SidebarProps = {
   currentPath: string;
   /** Optional slot for user avatar/menu at bottom (e.g. UserMenu from ui-auth). */
   userSlot?: React.ReactNode;
+  /** When true, sidebar shows labels and uses expanded width (e.g. on hover). */
+  expanded?: boolean;
 };
 
 export default function Sidebar({
   tenant,
   currentPath,
   userSlot,
+  expanded = false,
 }: SidebarProps): React.ReactElement {
   const navItemsWithActive = tenant.navItems.map((item) => ({
     ...item,
@@ -26,13 +29,18 @@ export default function Sidebar({
   }));
 
   return (
-    <aside className={styles.sidebar} role="navigation" aria-label="Main navigation">
+    <aside
+      className={styles.sidebar}
+      role="navigation"
+      aria-label="Main navigation"
+      data-expanded={expanded ? "true" : "false"}
+    >
       <GlassPanel
         variant="subtle"
         {...(styles.sidebarPanel ? { className: styles.sidebarPanel } : {})}
       >
         <div className={styles.sidebarBody}>
-          <div className={styles.logoWrap}>
+          {/* <div className={styles.logoWrap}>
             {tenant.logoUrl ? (
               <img
                 src={tenant.logoUrl}
@@ -45,13 +53,13 @@ export default function Sidebar({
                 {tenant.name.charAt(0)}
               </div>
             )}
-          </div>
+          </div> */}
           <nav className={styles.navList} aria-label="Primary">
             {navItemsWithActive.map((item) => (
               <NavItem
                 key={item.id}
                 item={item}
-                isCollapsed
+                isCollapsed={!expanded}
               />
             ))}
           </nav>

@@ -3,8 +3,8 @@
 
 .glassCard {
   position: relative;
-  border: 1px solid var(--ns-color-border);
-  /* border-radius: var(--ns-radius-lg); */
+  /* border: 1px solid var(--ns-color-border); */
+  border-radius: var(--ns-radius-sm);
   overflow: hidden;
 }
 

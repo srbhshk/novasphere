@@ -1,35 +1,58 @@
 /* SPDX-License-Identifier: MIT */
-/* @novasphere/ui-shell — AppShell grid layout */
+/* @novasphere/ui-shell — AppShell: full-width sticky header, sidebar + main */
 
 .root {
   min-height: 100vh;
-  display: grid;
-  grid-template-columns: 72px 1fr;
-  grid-template-rows: auto 1fr;
-  grid-template-areas:
-    "sidebar topbar"
-    "sidebar main";
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
   background: var(--ns-color-bg);
 }
 
-.sidebarArea {
-  grid-area: sidebar;
-  position: relative;
-  z-index: 2;
+/* Full-width sticky header */
+.topbarArea {
+  flex: 0 0 auto;
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 10;
 }
 
-.topbarArea {
-  grid-area: topbar;
-  position: relative;
-  z-index: 2;
+/* Content row: sidebar (sticky left) + main */
+.contentRow {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Fixed 72px column — expanded sidebar overlays main (no layout shift) */
+.sidebarArea {
+  flex: 0 0 72px;
+  width: 72px;
+  min-width: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  align-self: stretch;
+  position: sticky;
+  left: 0;
+  top: 0;
+  z-index: 10;
+  overflow: visible;
 }
 
 .main {
-  grid-area: main;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
   position: relative;
   z-index: 1;
-  min-height: 0;
   overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  overflow-x: hidden;
 }
 
 .ambientLayer {
@@ -45,3 +68,4 @@
   pointer-events: none;
   z-index: 1;
 }
+

@@ -34,7 +34,7 @@ export default function GlassCard({
         !asChild && styles.hoverable,
         highlight && styles.highlight,
         className,
-        "shadow-2xl rounded-sm border-2 border-ns-border"
+        "shadow-2xl"      
       )}
       role={asChild ? undefined : "group"}
     >

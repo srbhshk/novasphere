@@ -316,7 +316,7 @@ What would you like to investigate first?`,
           </div>
         </div>
       )}
-      <div className="p-4 md:p-6">
+      <div className="py-4 md:py-6 px-2 md:px-2">
         <BentoGrid
           layout={layout}
           modules={MODULE_REGISTRY}

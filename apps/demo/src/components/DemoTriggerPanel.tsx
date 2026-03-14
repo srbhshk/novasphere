@@ -52,18 +52,23 @@ export default function DemoTriggerPanel({
   );
 
   return (
-    <div className="fixed bottom-6 left-4 z-40 md:left-6">
+    <div className="fixed bottom-6 left-[88px] z-50 flex flex-col-reverse items-start gap-2">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
         disabled={busy}
-        className="mb-2 inline-flex items-center gap-1 rounded-full border border-ns-border bg-ns-surface/80 px-3 py-1 text-xs font-medium text-ns-text shadow hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ns-accent disabled:opacity-60"
+        className="inline-flex min-h-9 items-center gap-1.5 rounded-full border border-ns-border bg-ns-surface/90 px-4 py-2 text-sm font-medium text-ns-text shadow-md backdrop-blur-sm hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ns-accent disabled:opacity-60"
         aria-pressed={open}
+        aria-expanded={open}
+        aria-haspopup="menu"
       >
         ⚡ Demo
       </button>
       {open && !busy && (
-        <div className="w-56 rounded-xl border border-ns-border bg-ns-surface/90 p-3 text-xs text-ns-text shadow-lg">
+        <div
+          className="w-56 shrink-0 rounded-xl border border-ns-border bg-ns-surface/95 p-3 text-xs text-ns-text shadow-xl backdrop-blur-md"
+          role="menu"
+        >
           <p className="mb-2 text-[11px] uppercase tracking-wide text-ns-muted">
             Scenarios
           </p>
@@ -72,8 +77,9 @@ export default function DemoTriggerPanel({
               <button
                 key={scenario.id}
                 type="button"
+                role="menuitem"
                 onClick={() => runScenario(scenario.message)}
-                className="inline-flex items-center justify-between rounded-lg bg-ns-surface/80 px-3 py-1.5 text-left text-[13px] hover:bg-white/5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ns-border-hi"
+                className="inline-flex w-full items-center justify-between rounded-lg bg-ns-surface/80 px-3 py-2 text-left text-[13px] hover:bg-white/10 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ns-border-hi"
               >
                 <span>{scenario.label}</span>
               </button>
