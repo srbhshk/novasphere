@@ -3,44 +3,79 @@ alwaysApply: true
 ---
 
 # =============================================================================
+
 # NOVASPHERE — CURSOR RULES
+
 # =============================================================================
+
 # Project   : novasphere
+
 # Version   : 0.3.0
+
 # License   : MIT
+
 # Description: An open-source, AI-native SaaS dashboard template featuring
-#              Liquid Glass aesthetics, Generative UI, Bento Grid layouts,
-#              and a pluggable agent copilot. Structured as a pnpm workspace
-#              monorepo with independently publishable packages. Each package
-#              is usable standalone — install only what you need.
-#              AI-independent by default: runs fully offline via Ollama
-#              (Qwen2.5 0.5B). External providers (Claude, OpenAI) are
-#              opt-in via env keys. No API key required to run or demo.
-# Repo      : https://github.com/your-org/novasphere
+
+# Liquid Glass aesthetics, Generative UI, Bento Grid layouts
+
+# and a pluggable agent copilot. Structured as a pnpm workspace
+
+# monorepo with independently publishable packages. Each package
+
+# is usable standalone — install only what you need
+
+# AI-independent by default: runs fully offline via Ollama
+
+# (Qwen2.5 0.5B). External providers (Claude, OpenAI) are
+
+# opt-in via env keys. No API key required to run or demo
+
+# Repo      : <https://github.com/your-org/novasphere>
+
 # =============================================================================
+
 #
+
 # PURPOSE OF THIS FILE
+
 # --------------------
+
 # This file is the single source of truth for Cursor AI when working on
+
 # novasphere. It defines the architecture, conventions, constraints, and
-# patterns that MUST be followed at all times.
+
+# patterns that MUST be followed at all times
+
 #
-# Cursor must NEVER:
-#   - Invent patterns not described here
-#   - Add dependencies not listed in the approved stack
-#   - Make assumptions about business logic — ask instead
-#   - Skip TypeScript types or use `any`
-#   - Generate placeholder/lorem content in production code paths
-#   - Combine concerns that this file separates (e.g. data fetching in UI)
-#   - Import across package boundaries that are forbidden (see Section 3)
-#   - Create files outside the structure defined in Section 4
+
+# Cursor must NEVER
+
+# - Invent patterns not described here
+
+# - Add dependencies not listed in the approved stack
+
+# - Make assumptions about business logic — ask instead
+
+# - Skip TypeScript types or use `any`
+
+# - Generate placeholder/lorem content in production code paths
+
+# - Combine concerns that this file separates (e.g. data fetching in UI)
+
+# - Import across package boundaries that are forbidden (see Section 3)
+
+# - Create files outside the structure defined in Section 4
+
 #
-# When in doubt: STOP and ask the developer. Do not guess.
+
+# When in doubt: STOP and ask the developer. Do not guess
+
 # =============================================================================
 
-
 # =============================================================================
+
 # 1. PROJECT IDENTITY
+
 # =============================================================================
 
 project:
@@ -75,13 +110,18 @@ project:
     - Not a model training or fine-tuning framework
     - Not a monolith — shared logic must live in packages, not duplicated in apps
 
+# =============================================================================
+
+# 2. MONOREPO ARCHITECTURE
 
 # =============================================================================
-# 2. MONOREPO ARCHITECTURE
-# =============================================================================
-# This is the most important section. Read it fully before writing any code.
-# The monorepo structure, package registry, and boundary rules are FIXED.
-# Cursor must not create new packages without explicit developer approval.
+
+# This is the most important section. Read it fully before writing any code
+
+# The monorepo structure, package registry, and boundary rules are FIXED
+
+# Cursor must not create new packages without explicit developer approval
+
 # =============================================================================
 
 monorepo:
@@ -95,10 +135,13 @@ monorepo:
       - "apps/*"
       - "packages/*"
 
-  # ── PACKAGE REGISTRY ────────────────────────────────────────────────────────
-  # Every package in the monorepo is listed here with its full identity.
-  # Cursor must use these EXACT names in import statements and package.json.
-  # ─────────────────────────────────────────────────────────────────────────────
+# ── PACKAGE REGISTRY ────────────────────────────────────────────────────────
+
+# Every package in the monorepo is listed here with its full identity
+
+# Cursor must use these EXACT names in import statements and package.json
+
+# ─────────────────────────────────────────────────────────────────────────────
 
   packages:
 
@@ -329,11 +372,13 @@ monorepo:
         - zustand
       publishes_to_npm: true
 
+# ── PACKAGE BOUNDARY RULES ───────────────────────────────────────────────────
 
-  # ── PACKAGE BOUNDARY RULES ───────────────────────────────────────────────────
-  # These are HARD RULES. Cursor must check these before every import.
-  # A boundary violation is a blocking error — fix it before moving on.
-  # ─────────────────────────────────────────────────────────────────────────────
+# These are HARD RULES. Cursor must check these before every import
+
+# A boundary violation is a blocking error — fix it before moving on
+
+# ─────────────────────────────────────────────────────────────────────────────
 
   boundary_rules:
 
@@ -379,13 +424,18 @@ monorepo:
       INCORRECT: import { tokens } from '@novasphere/ui-glass/tokens'
                  (this is self-referential and wrong)
 
+# =============================================================================
+
+# 3. APPROVED TECH STACK
 
 # =============================================================================
-# 3. APPROVED TECH STACK
-# =============================================================================
+
 # Cursor must NEVER introduce a library outside this list without explicit
+
 # developer approval. If a task requires something not listed here, STOP
-# and ask before proceeding.
+
+# and ask before proceeding
+
 # =============================================================================
 
 stack:
@@ -689,13 +739,18 @@ stack:
   package_manager: pnpm
   node_version: ">=20.0.0"
 
+# =============================================================================
+
+# 4. FULL REPOSITORY STRUCTURE
 
 # =============================================================================
-# 4. FULL REPOSITORY STRUCTURE
-# =============================================================================
+
 # FIXED. Cursor must never create files outside these locations without
-# explicit developer approval. When in doubt about where a file belongs,
-# check the package registry in Section 2 first, then ask.
+
+# explicit developer approval. When in doubt about where a file belongs
+
+# check the package registry in Section 2 first, then ask
+
 # =============================================================================
 
 structure: |
@@ -903,9 +958,10 @@ structure: |
   ├── LICENSE
   └── README.md
 
-
 # =============================================================================
+
 # 5. NAMING CONVENTIONS
+
 # =============================================================================
 
 naming:
@@ -954,9 +1010,10 @@ naming:
                      chore/tokens/add-blur-tokens)"
     commits: "Conventional Commits — see Section 9"
 
-
 # =============================================================================
+
 # 6. COMPONENT RULES
+
 # =============================================================================
 
 components:
@@ -1007,11 +1064,14 @@ components:
     - Loading and error states are mandatory for async data components.
     - "use client" is deleted from the file if not needed — never left in.
 
+# =============================================================================
+
+# 7. PACKAGE.JSON RULES
 
 # =============================================================================
-# 7. PACKAGE.JSON RULES
-# =============================================================================
-# Each package has a package.json. Cursor must follow this template exactly.
+
+# Each package has a package.json. Cursor must follow this template exactly
+
 # =============================================================================
 
 package_json:
@@ -1024,7 +1084,7 @@ package_json:
       "author": "novasphere contributors",
       "repository": {
         "type": "git",
-        "url": "https://github.com/your-org/novasphere",
+        "url": "<https://github.com/your-org/novasphere>",
         "directory": "packages/[package-name]"
       },
       "main": "./dist/index.cjs",
@@ -1063,9 +1123,10 @@ package_json:
     - Storybook port numbers: tokens=6001, ui-glass=6002, ui-bento=6003,
       ui-charts=6004, ui-agent=6005, ui-auth=6006, ui-shell=6007.
 
-
 # =============================================================================
+
 # 8. TESTING RULES
+
 # =============================================================================
 
 testing:
@@ -1126,9 +1187,10 @@ testing:
     minimum: 80% per package for components
     enforcement: CI fails below threshold per package
 
-
 # =============================================================================
+
 # 9. GIT & CONTRIBUTION RULES
+
 # =============================================================================
 
 git:
@@ -1186,9 +1248,10 @@ git:
       - PR title follows Conventional Commits format.
       - Changeset file included for any package change.
 
-
 # =============================================================================
+
 # 10. ENVIRONMENT VARIABLES
+
 # =============================================================================
 
 env:
@@ -1204,7 +1267,7 @@ env:
 
   variables: |
     # ── App ──────────────────────────────────────────────────────────────
-    NEXT_PUBLIC_APP_URL         # Base URL (e.g. http://localhost:3000)
+    NEXT_PUBLIC_APP_URL         # Base URL (e.g. <http://localhost:3000>)
     NEXT_PUBLIC_DATA_SOURCE     # mock | api  (default: mock)
     NEXT_PUBLIC_TENANT_MODE     # static | dynamic  (default: static)
 
@@ -1227,9 +1290,10 @@ env:
     # ── Security ─────────────────────────────────────────────────────────
     RATE_LIMIT_AGENT_RPM        # Max agent requests/min per IP (default: 20)
 
-
 # =============================================================================
+
 # 11. LOCAL LLM UX RULES
+
 # =============================================================================
 
 local_llm_ux:
@@ -1256,7 +1320,7 @@ local_llm_ux:
     behaviour: >
       Silently falls through to WebLLMAdapter. Shows one-time dismissible
       banner in CopilotPanel: "Ollama not detected — running in browser mode.
-      Install Ollama for faster responses." with link to https://ollama.com
+      Install Ollama for faster responses." with link to <https://ollama.com>
     rules:
       - Never block the UI. Health check is async and non-blocking.
       - Panel loads immediately in 'checking' state.
@@ -1275,9 +1339,10 @@ local_llm_ux:
       - Animate to 100% then fade out on completion.
       - Only shown for WebLLMAdapter — never for other adapters.
 
-
 # =============================================================================
+
 # 12. API ROUTE RULES
+
 # =============================================================================
 
 api:
@@ -1295,9 +1360,10 @@ api:
     - Semantically correct HTTP status codes always.
     - Rate limiting on /api/agent route via RATE_LIMIT_AGENT_RPM.
 
-
 # =============================================================================
+
 # 13. PERFORMANCE RULES
+
 # =============================================================================
 
 performance:
@@ -1315,9 +1381,10 @@ performance:
     - Bundle budget: no single package's dist exceeds 50KB gzipped (excl. assets).
     - Run `pnpm --filter apps/demo analyze` before every demo release.
 
-
 # =============================================================================
+
 # 14. ACCESSIBILITY RULES
+
 # =============================================================================
 
 accessibility:
@@ -1333,9 +1400,10 @@ accessibility:
     - shadcn/ui ARIA attributes are never overridden.
     - Playwright accessibility checks run on every E2E page test.
 
-
 # =============================================================================
+
 # 15. SECURITY RULES
+
 # =============================================================================
 
 security:
@@ -1350,9 +1418,10 @@ security:
     - Rate limiting on /api/agent to prevent AI cost abuse.
     - Packages never read process.env — env config passed from app layer only.
 
-
 # =============================================================================
+
 # 16. DOCUMENTATION RULES
+
 # =============================================================================
 
 documentation:
@@ -1360,11 +1429,11 @@ documentation:
     - Every exported function, type, hook, component has a JSDoc comment.
     - JSDoc format:
         /**
-         * [What it does — one sentence maximum]
+         *[What it does — one sentence maximum]
          *
-         * @param propName - [what it is]
+         *@param propName - [what it is]
          * @returns [what comes back]
-         * @example
+         *@example
          * <ComponentName prop="value" />
          */
     - Each package has its own README.md covering:
@@ -1381,9 +1450,10 @@ documentation:
     - nova.config.ts heavily commented — first config file a developer reads.
     - TODO comments require a linked GitHub issue: // TODO(#123): description
 
-
 # =============================================================================
+
 # 17. CURSOR BEHAVIOURAL RULES
+
 # =============================================================================
 
 cursor_behaviour:
@@ -1427,12 +1497,16 @@ cursor_behaviour:
     - Never push directly to main.
     - Never publish a package without a changeset.
 
+# =============================================================================
+
+# 18. NOVA.CONFIG.TS — TOP-LEVEL PROJECT CONFIG
 
 # =============================================================================
-# 18. NOVA.CONFIG.TS — TOP-LEVEL PROJECT CONFIG
-# =============================================================================
-# Lives at the monorepo root. Future target for the novasphere CLI.
-# This is what a CLI wizard would generate. All top-level values live here.
+
+# Lives at the monorepo root. Future target for the novasphere CLI
+
+# This is what a CLI wizard would generate. All top-level values live here
+
 # =============================================================================
 
 nova_config:
@@ -1487,10 +1561,17 @@ nova_config:
       add a Storybook story variant, document in README.
 
 # =============================================================================
+
 # END OF CURSOR RULES
+
 # Version  : 0.3.0
-# Changes  : Full pnpm workspace monorepo architecture. Package registry.
-#             Package boundary rules. Independent versioning via Changesets.
-#             tsup build system. Per-package Storybook. Monorepo folder
-#             structure. Updated all section references and file paths.
+
+# Changes  : Full pnpm workspace monorepo architecture. Package registry
+
+# Package boundary rules. Independent versioning via Changesets
+
+# tsup build system. Per-package Storybook. Monorepo folder
+
+# structure. Updated all section references and file paths
+
 # =============================================================================
