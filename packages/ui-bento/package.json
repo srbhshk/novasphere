@@ -1,6 +1,7 @@
 {
   "name": "@novasphere/ui-bento",
   "version": "0.0.1",
+  "sideEffects": false,
   "description": "Bento Grid layout system. Contains BentoGrid, BentoCard, and the data-driven layout engine. Includes drag-to-reorder via Framer Motion.",
   "license": "MIT",
   "author": "novasphere contributors",

@@ -1,6 +1,7 @@
 {
   "name": "@novasphere/agent-core",
   "version": "0.0.1",
+  "sideEffects": false,
   "description": "The AI adapter system. Framework-agnostic TypeScript — no React, no CSS, no UI. Contains the AgentAdapter interface, adapter factory, and concrete adapter implementations.",
   "license": "MIT",
   "author": "novasphere contributors",

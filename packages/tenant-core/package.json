@@ -1,6 +1,7 @@
 {
   "name": "@novasphere/tenant-core",
   "version": "0.0.1",
+  "sideEffects": false,
   "description": "The multi-tenancy system. Framework-agnostic TypeScript — no React, no CSS. Contains TenantConfig types, the static tenant registry, and tenant resolution utilities.",
   "license": "MIT",
   "author": "novasphere contributors",

@@ -90,7 +90,7 @@ export default function BentoGrid({
             }}
             whileDrag={{
               scale: 1.02,
-              boxShadow: "0 12px 40px rgba(0, 0, 0, 0.35)",
+              boxShadow: "var(--ns-shadow-elevated)",
               cursor: "grabbing",
             }}
           >

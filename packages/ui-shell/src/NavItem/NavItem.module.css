@@ -21,7 +21,7 @@
 .navItemActive {
   background: var(--ns-glass-bg-medium);
   color: var(--ns-color-accent);
-  box-shadow: 0 0 0 1px rgba(79, 142, 247, 0.2), 0 0 12px var(--ns-glow-accent);
+  box-shadow: 0 0 0 1px var(--ns-color-accent-20), 0 0 12px var(--ns-glow-accent);
 }
 
 .navItemActive:hover {

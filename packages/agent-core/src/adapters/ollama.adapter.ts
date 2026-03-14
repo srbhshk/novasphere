@@ -6,15 +6,25 @@ import type { AgentAdapter } from '../adapter.interface';
 import type { AgentMessage, AgentResponse } from '../agent.types';
 import type { AgentContext } from '../context.types';
 import { getPrompt } from '../prompts';
-import { AgentNetworkError, AgentParseError, OllamaNotReachableError } from '../agent.errors';
+import { AgentError, AgentNetworkError, AgentParseError, AgentTimeoutError, OllamaNotReachableError } from '../agent.errors';
 
 const DEFAULT_BASE_URL = 'http://localhost:11434';
 const DEFAULT_MODEL = 'qwen2.5:0.5b';
-const INIT_TIMEOUT_MS = 2000;
+const INIT_TIMEOUT_MS = 2_000;
+const CHAT_TIMEOUT_MS = 30_000;
+const STREAM_TIMEOUT_MS = 60_000;
+const STREAM_FIRST_TOKEN_TIMEOUT_MS = 10_000;
 
 export type OllamaAdapterConfig = {
   baseUrl?: string;
   modelName?: string;
+  chatTimeoutMs?: number;
+  streamTimeoutMs?: number;
+  firstTokenTimeoutMs?: number;
+};
+
+type OllamaChatChunk = {
+  choices?: Array<{ delta?: { content?: string }; message?: { content?: string } }>;
 };
 
 type OllamaMessage = { role: 'system' | 'user' | 'assistant'; content: string };
@@ -57,10 +67,20 @@ export class OllamaAdapter implements AgentAdapter {
   readonly type = 'ollama';
   readonly modelName: string;
   private readonly baseUrl: string;
+  private readonly config: {
+    chatTimeoutMs: number;
+    streamTimeoutMs: number;
+    firstTokenTimeoutMs: number;
+  };
 
   constructor(config: OllamaAdapterConfig = {}) {
     this.baseUrl = config.baseUrl ?? DEFAULT_BASE_URL;
     this.modelName = config.modelName ?? DEFAULT_MODEL;
+    this.config = {
+      chatTimeoutMs: config.chatTimeoutMs ?? CHAT_TIMEOUT_MS,
+      streamTimeoutMs: config.streamTimeoutMs ?? STREAM_TIMEOUT_MS,
+      firstTokenTimeoutMs: config.firstTokenTimeoutMs ?? STREAM_FIRST_TOKEN_TIMEOUT_MS,
+    };
   }
 
   async init(): Promise<void> {
@@ -84,38 +104,53 @@ export class OllamaAdapter implements AgentAdapter {
   }
 
   async chat(messages: AgentMessage[], context: AgentContext): Promise<AgentResponse> {
-    const prompt = getPrompt('metric_explain');
-    const userContent = prompt.buildUserPrompt(context, context.userMessage);
-    const ollamaMessages = toOllamaMessages(messages, prompt.systemPrompt, userContent);
-    const body = buildBody(this.modelName, ollamaMessages, false);
+    const controller = new AbortController();
+    const timeoutMs = this.config.chatTimeoutMs;
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
-    let res: Response;
     try {
-      res = await fetch(`${this.baseUrl}/v1/chat/completions`, {
+      const prompt = getPrompt('metric_explain');
+      const userContent = prompt.buildUserPrompt(context, context.userMessage);
+      const ollamaMessages = toOllamaMessages(messages, prompt.systemPrompt, userContent);
+      const body = buildBody(this.modelName, ollamaMessages, false);
+
+      const response = await fetch(`${this.baseUrl}/v1/chat/completions`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body,
+        signal: controller.signal,
       });
-    } catch (err) {
-      throw new AgentNetworkError(err instanceof Error ? err.message : 'Network error', {
-        cause: err instanceof Error ? err : undefined,
-      });
-    }
 
-    if (!res.ok) {
-      throw new AgentNetworkError(`Ollama returned ${res.status}`);
-    }
+      clearTimeout(timeoutId);
 
-    let data: { choices?: Array<{ message?: { content?: string } }> };
-    try {
-      const text = await res.text();
-      data = JSON.parse(text) as { choices?: Array<{ message?: { content?: string } }> };
-    } catch {
-      throw new AgentParseError('Invalid JSON response from Ollama');
-    }
+      if (!response.ok) {
+        throw new AgentNetworkError(
+          `Ollama returned ${response.status}: ${response.statusText}`
+        );
+      }
 
-    const content = data?.choices?.[0]?.message?.content ?? '';
-    return makeResponse(content);
+      const text = await response.text();
+      let data: { choices?: Array<{ message?: { content?: string } }> };
+      try {
+        // Safe: Ollama chat completions API returns OpenAI-compatible shape.
+        data = JSON.parse(text) as { choices?: Array<{ message?: { content?: string } }> };
+      } catch {
+        throw new AgentParseError('Invalid JSON response from Ollama');
+      }
+
+      const content = data?.choices?.[0]?.message?.content ?? '';
+      return makeResponse(content);
+    } catch (error) {
+      clearTimeout(timeoutId);
+      if (error instanceof Error && error.name === 'AbortError') {
+        throw new AgentTimeoutError(`Ollama chat timed out after ${timeoutMs}ms`);
+      }
+      if (error instanceof AgentError) throw error;
+      throw new AgentNetworkError(
+        `Ollama chat failed: ${error instanceof Error ? error.message : String(error)}`,
+        { cause: error instanceof Error ? error : undefined }
+      );
+    }
   }
 
   async streamChat(
@@ -123,38 +158,38 @@ export class OllamaAdapter implements AgentAdapter {
     context: AgentContext,
     onToken: (token: string) => void
   ): Promise<AgentResponse> {
-    const prompt = getPrompt('metric_explain');
-    const userContent = prompt.buildUserPrompt(context, context.userMessage);
-    const ollamaMessages = toOllamaMessages(messages, prompt.systemPrompt, userContent);
-    const body = buildBody(this.modelName, ollamaMessages, true);
+    const controller = new AbortController();
+    let firstTokenReceived = false;
+    const totalTimeoutMs = this.config.streamTimeoutMs;
+    const firstTokenTimeoutMs = this.config.firstTokenTimeoutMs;
 
-    let res: Response;
+    const totalTimeoutId = setTimeout(() => controller.abort(), totalTimeoutMs);
+    const firstTokenTimeoutId = setTimeout(() => {
+      if (!firstTokenReceived) controller.abort();
+    }, firstTokenTimeoutMs);
+
     try {
-      res = await fetch(`${this.baseUrl}/v1/chat/completions`, {
+      const prompt = getPrompt('metric_explain');
+      const userContent = prompt.buildUserPrompt(context, context.userMessage);
+      const ollamaMessages = toOllamaMessages(messages, prompt.systemPrompt, userContent);
+      const body = buildBody(this.modelName, ollamaMessages, true);
+
+      const response = await fetch(`${this.baseUrl}/v1/chat/completions`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body,
+        signal: controller.signal,
       });
-    } catch (err) {
-      throw new AgentNetworkError(err instanceof Error ? err.message : 'Network error', {
-        cause: err instanceof Error ? err : undefined,
-      });
-    }
 
-    if (!res.ok) {
-      throw new AgentNetworkError(`Ollama returned ${res.status}`);
-    }
+      if (!response.ok || !response.body) {
+        throw new AgentNetworkError(`Ollama stream failed: ${response.status}`);
+      }
 
-    const reader = res.body?.getReader();
-    if (!reader) {
-      throw new AgentNetworkError('No response body');
-    }
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = '';
+      let fullContent = '';
 
-    const decoder = new TextDecoder();
-    let buffer = '';
-    let fullContent = '';
-
-    try {
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
@@ -164,30 +199,58 @@ export class OllamaAdapter implements AgentAdapter {
         for (const line of lines) {
           if (line.startsWith('data: ')) {
             const payload = line.slice(6).trim();
-            if (payload === '[DONE]') continue;
+            if (payload === '[DONE]') break;
             try {
-              const data = JSON.parse(payload) as {
-                choices?: Array<{ delta?: { content?: string } }>;
-              };
-              const delta = data?.choices?.[0]?.delta?.content;
-              if (typeof delta === 'string') {
-                fullContent += delta;
-                onToken(delta);
+              // Safe: Ollama SSE stream sends chunks in this shape.
+              const parsed = JSON.parse(payload) as OllamaChatChunk;
+              const token = parsed.choices?.[0]?.delta?.content ?? parsed.choices?.[0]?.message?.content ?? '';
+              if (token) {
+                if (!firstTokenReceived) {
+                  firstTokenReceived = true;
+                  clearTimeout(firstTokenTimeoutId);
+                }
+                fullContent += token;
+                onToken(token);
               }
             } catch {
-              // ignore parse errors for partial chunks
+              // malformed chunk — skip, continue streaming
             }
           }
         }
       }
-    } catch (err) {
-      if (err instanceof AgentNetworkError) throw err;
-      throw new AgentNetworkError(err instanceof Error ? err.message : 'Stream read failed', {
-        cause: err instanceof Error ? err : undefined,
-      });
-    }
 
-    return makeResponse(fullContent);
+      clearTimeout(totalTimeoutId);
+      clearTimeout(firstTokenTimeoutId);
+
+      return {
+        message: {
+          id: `ollama-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
+          role: 'assistant',
+          content: fullContent,
+          timestamp: Date.now(),
+        },
+        isStreaming: false,
+        done: true,
+      };
+    } catch (error) {
+      clearTimeout(totalTimeoutId);
+      clearTimeout(firstTokenTimeoutId);
+      if (error instanceof Error && error.name === 'AbortError') {
+        if (!firstTokenReceived) {
+          throw new AgentTimeoutError(
+            `Ollama: no response within ${firstTokenTimeoutMs}ms`
+          );
+        }
+        throw new AgentTimeoutError(
+          `Ollama stream timed out after ${totalTimeoutMs}ms`
+        );
+      }
+      if (error instanceof AgentError) throw error;
+      throw new AgentNetworkError(
+        `Ollama stream error: ${error instanceof Error ? error.message : String(error)}`,
+        { cause: error instanceof Error ? error : undefined }
+      );
+    }
   }
 
   getStatus(): 'idle' | 'checking' | 'thinking' | 'streaming' | 'downloading' | 'error' {

@@ -115,6 +115,9 @@ const DEFAULT: BentoLayoutConfig = [
   },
 ];
 
+/** Single source of truth for initial dashboard layout; used by layout.store and reset. */
+export const DEFAULT_LAYOUT = DEFAULT;
+
 // CEO_VIEW:
 //   - Revenue hero (6x2)
 //   - Users (6x1)

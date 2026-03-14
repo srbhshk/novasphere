@@ -6,12 +6,22 @@ import type { AgentAdapter } from '../adapter.interface';
 import type { AgentMessage, AgentResponse } from '../agent.types';
 import type { AgentContext } from '../context.types';
 import { getPrompt } from '../prompts';
-import { AgentParseError, WebGPUNotSupportedError } from '../agent.errors';
+import { AgentParseError, AgentTimeoutError, WebGPUNotSupportedError } from '../agent.errors';
 
 const WEBLLM_MODEL_ID = 'Phi-3-mini-4k-instruct-q4f16_1-MLC';
+const CHAT_TIMEOUT_MS = 30_000;
+const STREAM_TIMEOUT_MS = 60_000;
+
+function timeoutPromise<T>(ms: number, message: string): Promise<T> {
+  return new Promise((_, reject) => {
+    setTimeout(() => reject(new AgentTimeoutError(message)), ms);
+  });
+}
 
 export type WebLLMAdapterConfig = {
   onProgress?: (progress: number, text: string) => void;
+  chatTimeoutMs?: number;
+  streamTimeoutMs?: number;
 };
 
 type MLCEngine = {
@@ -64,9 +74,13 @@ export class WebLLMAdapter implements AgentAdapter {
 
   private engine: MLCEngine | null = null;
   private readonly onProgress: ((progress: number, text: string) => void) | undefined;
+  private readonly chatTimeoutMs: number;
+  private readonly streamTimeoutMs: number;
 
   constructor(config: WebLLMAdapterConfig = {}) {
     this.onProgress = config.onProgress;
+    this.chatTimeoutMs = config.chatTimeoutMs ?? CHAT_TIMEOUT_MS;
+    this.streamTimeoutMs = config.streamTimeoutMs ?? STREAM_TIMEOUT_MS;
   }
 
   async init(): Promise<void> {
@@ -82,6 +96,7 @@ export class WebLLMAdapter implements AgentAdapter {
           },
         }
       : undefined;
+    // Safe: @mlc-ai/web-llm is dynamically imported; MLCEngine type not available statically — cast verified at runtime.
     this.engine = (await CreateMLCEngine(WEBLLM_MODEL_ID, engineConfig)) as unknown as MLCEngine;
   }
 
@@ -91,10 +106,18 @@ export class WebLLMAdapter implements AgentAdapter {
     const prompt = getPrompt('metric_explain');
     const userContent = prompt.buildUserPrompt(context, context.userMessage);
     const webllmMessages = toWebLLMMessages(messages, prompt.systemPrompt, userContent);
-    const result = await engine.chat.completions.create({
+    const chatPromise = engine.chat.completions.create({
       messages: webllmMessages,
       stream: false,
     });
+    const result = await Promise.race([
+      chatPromise,
+      timeoutPromise<never>(
+        this.chatTimeoutMs,
+        `WebLLM chat timed out after ${this.chatTimeoutMs}ms`
+      ),
+    ]);
+    // Safe: WebLLM create() returns engine-specific shape; we only read choices[0].message.content.
     const resolved = result as { choices?: Array<{ message?: { content?: string | null } }> };
     const content = resolved?.choices?.[0]?.message?.content ?? '';
     if (typeof content !== 'string') {
@@ -113,20 +136,30 @@ export class WebLLMAdapter implements AgentAdapter {
     const prompt = getPrompt('metric_explain');
     const userContent = prompt.buildUserPrompt(context, context.userMessage);
     const webllmMessages = toWebLLMMessages(messages, prompt.systemPrompt, userContent);
-    const stream = await engine.chat.completions.create({
-      messages: webllmMessages,
-      stream: true,
-    });
-    let fullContent = '';
-    const iterable = stream as AsyncIterable<{ choices?: Array<{ delta?: { content?: string | null } }> }>;
-    for await (const chunk of iterable) {
-      const delta = chunk?.choices?.[0]?.delta?.content;
-      if (typeof delta === 'string') {
-        fullContent += delta;
-        onToken(delta);
+    const streamPromise = (async () => {
+      const stream = await engine.chat.completions.create({
+        messages: webllmMessages,
+        stream: true,
+      });
+      let fullContent = '';
+      // Safe: WebLLM stream shape; we only read choices[0].delta.content.
+      const iterable = stream as AsyncIterable<{ choices?: Array<{ delta?: { content?: string | null } }> }>;
+      for await (const chunk of iterable) {
+        const delta = chunk?.choices?.[0]?.delta?.content;
+        if (typeof delta === 'string') {
+          fullContent += delta;
+          onToken(delta);
+        }
       }
-    }
-    return makeResponse(fullContent);
+      return makeResponse(fullContent);
+    })();
+    return Promise.race([
+      streamPromise,
+      timeoutPromise<never>(
+        this.streamTimeoutMs,
+        `WebLLM stream timed out after ${this.streamTimeoutMs}ms`
+      ),
+    ]);
   }
 
   getStatus(): 'idle' | 'checking' | 'thinking' | 'streaming' | 'downloading' | 'error' {

@@ -5,7 +5,7 @@
 import type { AgentAdapter } from './adapter.interface';
 import type { AdapterType } from './agent.types';
 import { MockAdapter } from './adapters/mock.adapter';
-import { OllamaAdapter } from './adapters/ollama.adapter';
+import { OllamaAdapter, type OllamaAdapterConfig } from './adapters/ollama.adapter';
 import { WebLLMAdapter } from './adapters/webllm.adapter';
 import { ClaudeAdapter } from './adapters/claude.adapter';
 import type { ClaudeAdapterConfig } from './adapters/claude.adapter';
@@ -17,6 +17,12 @@ export type AdapterFactoryConfig = {
   type: AdapterType | 'auto';
   ollamaUrl?: string;
   ollamaModel?: string;
+  /** Chat timeout in ms (Ollama; default 30_000). */
+  chatTimeoutMs?: number;
+  /** Stream timeout in ms (Ollama; default 60_000). */
+  streamTimeoutMs?: number;
+  /** First-token timeout in ms for streaming (Ollama only; default 10_000). */
+  firstTokenTimeoutMs?: number;
   claudeKey?: string;
   claudeModel?: string;
   openaiKey?: string;
@@ -54,9 +60,12 @@ export async function createAdapter(config: AdapterFactoryConfig): Promise<Agent
 
   // auto: try Ollama first
   try {
-    const ollamaConfig: { baseUrl?: string; modelName?: string } = {};
+    const ollamaConfig: OllamaAdapterConfig = {};
     if (config.ollamaUrl !== undefined) ollamaConfig.baseUrl = config.ollamaUrl;
     if (config.ollamaModel !== undefined) ollamaConfig.modelName = config.ollamaModel;
+    if (config.chatTimeoutMs !== undefined) ollamaConfig.chatTimeoutMs = config.chatTimeoutMs;
+    if (config.streamTimeoutMs !== undefined) ollamaConfig.streamTimeoutMs = config.streamTimeoutMs;
+    if (config.firstTokenTimeoutMs !== undefined) ollamaConfig.firstTokenTimeoutMs = config.firstTokenTimeoutMs;
     const ollama = new OllamaAdapter(ollamaConfig);
     await ollama.init();
     return ollama;
@@ -87,9 +96,12 @@ function createAdapterByType(
 ): AgentAdapter {
   switch (type) {
     case 'ollama': {
-      const ollamaConfig: { baseUrl?: string; modelName?: string } = {};
+      const ollamaConfig: OllamaAdapterConfig = {};
       if (config.ollamaUrl !== undefined) ollamaConfig.baseUrl = config.ollamaUrl;
       if (config.ollamaModel !== undefined) ollamaConfig.modelName = config.ollamaModel;
+      if (config.chatTimeoutMs !== undefined) ollamaConfig.chatTimeoutMs = config.chatTimeoutMs;
+      if (config.streamTimeoutMs !== undefined) ollamaConfig.streamTimeoutMs = config.streamTimeoutMs;
+      if (config.firstTokenTimeoutMs !== undefined) ollamaConfig.firstTokenTimeoutMs = config.firstTokenTimeoutMs;
       return new OllamaAdapter(ollamaConfig);
     }
     case 'webllm': {

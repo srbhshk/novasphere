@@ -51,6 +51,7 @@ function getSegmentColor(segment: DonutSegment, index: number): string {
 const ACTIVE_SCALE = 1.05;
 
 function renderActiveShape(props: unknown): ReactElement {
+  // Safe: Recharts Sector callback passes this shape.
   const p = props as {
     cx: number;
     cy: number;

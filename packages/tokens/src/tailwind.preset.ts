@@ -40,6 +40,14 @@ export const novaspherePreset = {
         "ns-base": "var(--ns-duration-base)",
         "ns-slow": "var(--ns-duration-slow)",
       },
+      boxShadow: {
+        "ns-card": "var(--ns-shadow-card)",
+        "ns-card-hover": "var(--ns-shadow-card-hover)",
+        "ns-sidebar": "var(--ns-shadow-sidebar)",
+        "ns-topbar": "var(--ns-shadow-topbar)",
+        "ns-panel": "var(--ns-shadow-panel)",
+        "ns-elevated": "var(--ns-shadow-elevated)",
+      },
     },
   },
 } as const;

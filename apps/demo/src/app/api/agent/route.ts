@@ -95,6 +95,7 @@ export async function POST(
     );
   }
   const { messages, context } = parsed.data;
+  // Safe: Zod-validated context; array shapes match AgentContext (validated at API boundary).
   const agentContext: AgentContext = {
     tenantId: context.tenantId,
     userId: context.userId,
@@ -135,6 +136,7 @@ export async function POST(
           ...(process.env.OPENAI_BASE_URL && { openaiBaseUrl: process.env.OPENAI_BASE_URL }),
         };
 
+  // Safe: config is built from validated env and matches createAdapter union.
   const adapter = await createAdapter(config as Parameters<typeof createAdapter>[0]);
 
   const stream = new ReadableStream({
@@ -146,11 +148,11 @@ export async function POST(
       };
       try {
         await adapter.streamChat(agentMessages, agentContext, (token: string) => {
-          send(JSON.stringify({ token }) as string);
+          send(JSON.stringify({ token }));
         });
         send("[DONE]");
       } catch (err) {
-        send(JSON.stringify({ error: err instanceof Error ? err.message : "Stream error" }) as string);
+        send(JSON.stringify({ error: err instanceof Error ? err.message : "Stream error" }));
       } finally {
         controller.close();
         await adapter.destroy();

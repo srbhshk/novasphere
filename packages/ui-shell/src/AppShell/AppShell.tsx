@@ -9,14 +9,17 @@ import type { TenantConfig } from "@novasphere/tenant-core";
 import { AmbientBackground, GrainOverlay } from "@novasphere/ui-glass";
 import { Sidebar } from "../Sidebar";
 import { Topbar } from "../Topbar";
+import type { BreadcrumbItem } from "../BreadcrumbBar";
 import styles from "./AppShell.module.css";
 
 export type AppShellProps = {
   tenant: TenantConfig;
   children: React.ReactNode;
   currentPath: string;
-  /** Page title shown in topbar breadcrumb. */
+  /** Page title; used as fallback when breadcrumbs are not provided or path has no match. */
   title?: string;
+  /** Optional breadcrumb items (e.g. from getBreadcrumbs). When provided, overrides title in topbar. */
+  breadcrumbs?: BreadcrumbItem[];
   /** Optional slot for user avatar/menu in sidebar (e.g. UserMenu from ui-auth). */
   sidebarUserSlot?: React.ReactNode;
   /** Optional slot for right-side topbar actions (buttons + avatar). */
@@ -28,6 +31,7 @@ export default function AppShell({
   children,
   currentPath,
   title = "Dashboard",
+  breadcrumbs,
   sidebarUserSlot,
   topbarRightSlot,
 }: AppShellProps): React.ReactElement {
@@ -56,6 +60,9 @@ export default function AppShell({
         <Topbar
           tenant={tenant}
           title={title}
+          {...(breadcrumbs != null && breadcrumbs.length > 0
+            ? { breadcrumbs }
+            : {})}
           rightSlot={topbarRightSlot}
         />
       </div>

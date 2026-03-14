@@ -1,6 +1,7 @@
 {
   "name": "@novasphere/ui-shell",
   "version": "0.0.1",
+  "sideEffects": false,
   "description": "Application shell components. The structural frame of the dashboard: Sidebar, Topbar, AppShell, NavItem, and BreadcrumbBar. Tenant-aware.",
   "license": "MIT",
   "author": "novasphere contributors",

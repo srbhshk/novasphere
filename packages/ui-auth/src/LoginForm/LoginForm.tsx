@@ -39,7 +39,7 @@ export default function LoginForm({
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<LoginFormValues>({
-    // Cast: zod types can differ between zod and @hookform/resolvers; schema is correct at runtime.
+    // Safe: schema is compatible; cast required for react-hook-form/zod version alignment.
     resolver: zodResolver(loginFormSchema as unknown as Parameters<typeof zodResolver>[0]),
     defaultValues: { email: "", password: "" },
   });

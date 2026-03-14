@@ -1,6 +1,7 @@
 {
   "name": "@novasphere/tokens",
   "version": "0.0.1",
+  "sideEffects": ["./dist/tokens.css"],
   "description": "Design token foundation. CSS custom properties and a Tailwind CSS preset. Zero JavaScript. Zero React. Zero dependencies.",
   "license": "MIT",
   "author": "novasphere contributors",

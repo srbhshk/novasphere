@@ -24,6 +24,7 @@ export {
   OllamaNotReachableError,
   AgentNetworkError,
   AgentParseError,
+  AgentTimeoutError,
   WebGPUNotSupportedError,
 } from './agent.errors';
 

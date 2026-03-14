@@ -14,6 +14,8 @@ import {
   type AgentMessage as AgentMessageType,
   type BentoCardConfig,
   type SuggestionChip,
+  AgentTimeoutError,
+  AgentNetworkError,
 } from "@novasphere/agent-core";
 import { useAgentStore } from "../agent.store";
 import { cn } from "../lib/utils";
@@ -56,6 +58,23 @@ export type CopilotPanelProps = {
   className?: string;
 };
 
+function isSuggestionChipArray(val: unknown): val is SuggestionChip[] {
+  return (
+    Array.isArray(val) &&
+    val.every(
+      (item): item is SuggestionChip =>
+        typeof item === "object" &&
+        item !== null &&
+        "id" in item &&
+        "label" in item &&
+        "action" in item &&
+        typeof (item as Record<string, unknown>).id === "string" &&
+        typeof (item as Record<string, unknown>).label === "string" &&
+        typeof (item as Record<string, unknown>).action === "string"
+    )
+  );
+}
+
 function tryParseLayoutJson(content: string): BentoCardConfig[] | null {
   const trimmed = content.trim();
   const jsonMatch = trimmed.match(/\[[\s\S]*\]/);
@@ -72,6 +91,7 @@ function tryParseLayoutJson(content: string): BentoCardConfig[] | null {
         "order" in item &&
         "moduleId" in item
     );
+    // Safe: tryParseLayoutJson validates shape before this cast.
     return valid ? (parsed as BentoCardConfig[]) : null;
   } catch {
     return null;
@@ -194,15 +214,39 @@ export default function CopilotPanel({
         );
         if (chipsMatch) {
           try {
-            const chips = JSON.parse(chipsMatch[0]) as SuggestionChip[];
-            if (Array.isArray(chips)) setSuggestions(chips);
+            const parsed: unknown = JSON.parse(chipsMatch[0]);
+            if (isSuggestionChipArray(parsed)) setSuggestions(parsed);
           } catch {
             // ignore
           }
         }
       }
-    } catch {
+    } catch (error) {
       finaliseStream();
+      if (error instanceof AgentTimeoutError) {
+        addMessage({
+          id: `err-${Date.now()}`,
+          role: "assistant",
+          content:
+            "Nova took too long to respond. The model may be loading — try again in a moment.",
+          timestamp: Date.now(),
+        });
+      } else if (error instanceof AgentNetworkError) {
+        addMessage({
+          id: `err-${Date.now()}`,
+          role: "assistant",
+          content:
+            "Could not reach the AI model. Check that Ollama is running.",
+          timestamp: Date.now(),
+        });
+      } else {
+        addMessage({
+          id: `err-${Date.now()}`,
+          role: "assistant",
+          content: "Something went wrong. Please try again.",
+          timestamp: Date.now(),
+        });
+      }
       setStatus("error");
     }
   }, [

@@ -11,13 +11,13 @@
       "persistent": true
     },
     "typecheck": {
-      "dependsOn": []
+      "dependsOn": ["^build"]
     },
     "lint": {
       "dependsOn": []
     },
     "test": {
-      "dependsOn": []
+      "dependsOn": ["^build"]
     },
     "storybook": {
       "cache": false,

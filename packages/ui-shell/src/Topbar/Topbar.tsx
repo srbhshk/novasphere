@@ -33,7 +33,7 @@ export default function Topbar({
     <header className={styles.topbarRoot} role="banner">
       <GlassPanel
         variant="strong"
-        className={styles.topbarPanel || ""}
+        {...(styles.topbarPanel ? { className: styles.topbarPanel } : {})}
       >
         <div className={styles.topbar}>
           <div className={styles.left}>
