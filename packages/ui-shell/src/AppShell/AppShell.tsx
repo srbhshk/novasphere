@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // @novasphere/ui-shell — AppShell
-// Dashboard shell: full-width sticky header, left sidebar (expand on hover), main fills remaining area.
+// Dashboard shell: sticky header, sticky left sidebar (minimized by default, expand on click), main area with padding and vertical scroll.
 
 "use client";
 
@@ -40,12 +40,8 @@ export default function AppShell({
     [tenant.accentColor]
   );
 
-  const handleSidebarMouseEnter = React.useCallback(() => {
-    setSidebarExpanded(true);
-  }, []);
-
-  const handleSidebarMouseLeave = React.useCallback(() => {
-    setSidebarExpanded(false);
+  const handleSidebarExpandToggle = React.useCallback(() => {
+    setSidebarExpanded((prev) => !prev);
   }, []);
 
   return (
@@ -64,16 +60,13 @@ export default function AppShell({
         />
       </div>
       <div className={styles.contentRow}>
-        <div
-          className={styles.sidebarArea}
-          onMouseEnter={handleSidebarMouseEnter}
-          onMouseLeave={handleSidebarMouseLeave}
-        >
+        <div className={styles.sidebarArea}>
           <Sidebar
             tenant={tenant}
             currentPath={currentPath}
             userSlot={sidebarUserSlot}
             expanded={sidebarExpanded}
+            onExpandToggle={handleSidebarExpandToggle}
           />
         </div>
         <main className={styles.main} id="main-content">

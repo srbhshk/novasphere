@@ -25,5 +25,16 @@ export const Default: Story = {
   args: {
     tenant: demoTenant,
     currentPath: "/demo/dashboard",
+    expanded: false,
+    onExpandToggle: () => {},
+  },
+};
+
+export const Expanded: Story = {
+  args: {
+    tenant: demoTenant,
+    currentPath: "/demo/dashboard",
+    expanded: true,
+    onExpandToggle: () => {},
   },
 };
