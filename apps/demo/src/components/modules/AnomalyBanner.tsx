@@ -23,7 +23,7 @@ export default function AnomalyBanner({
   const message = extended.anomalyMessage ?? DEFAULT_MESSAGE;
 
   return (
-    <div className="flex h-full items-center justify-between gap-4 rounded-xl border border-amber-500/60 bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent px-4 py-3 shadow-[0_0_0_1px_rgba(248,179,51,0.4)] animate-pulse">
+    <div className="flex h-full items-center justify-between gap-4 rounded-xl border border-amber-500/60 bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent px-4 py-3 shadow-ns-warning-ring animate-pulse">
       <div className="flex items-start gap-3">
         <div className="mt-0.5 flex h-9 w-9 items-center justify-center rounded-full bg-amber-500/20 text-amber-400">
           <AlertTriangle className="h-5 w-5" aria-hidden />
