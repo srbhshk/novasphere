@@ -22,9 +22,9 @@ export default function GlobeModule({
         >
           <defs>
             <radialGradient id="globeGradient" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="rgba(79,142,247,0.9)" />
-              <stop offset="60%" stopColor="rgba(79,142,247,0.3)" />
-              <stop offset="100%" stopColor="rgba(6,8,15,1)" />
+              <stop offset="0%" stopColor="var(--ns-color-accent)" stopOpacity={0.9} />
+              <stop offset="60%" stopColor="var(--ns-color-accent)" stopOpacity={0.3} />
+              <stop offset="100%" stopColor="var(--ns-color-bg)" stopOpacity={1} />
             </radialGradient>
           </defs>
           <circle
@@ -32,7 +32,7 @@ export default function GlobeModule({
             cy="100"
             r="70"
             fill="url(#globeGradient)"
-            stroke="rgba(255,255,255,0.2)"
+            style={{ stroke: "var(--ns-color-border-hi)" }}
           />
           <ellipse
             cx="100"
@@ -40,7 +40,7 @@ export default function GlobeModule({
             rx="70"
             ry="26"
             fill="none"
-            stroke="rgba(255,255,255,0.12)"
+            style={{ stroke: "var(--ns-color-border)" }}
           />
           <ellipse
             cx="100"
@@ -48,44 +48,44 @@ export default function GlobeModule({
             rx="40"
             ry="70"
             fill="none"
-            stroke="rgba(255,255,255,0.12)"
+            style={{ stroke: "var(--ns-color-border)" }}
           />
           <path
             d="M40 85 C 80 60, 120 60, 160 85"
             fill="none"
-            stroke="rgba(56,189,248,0.5)"
             strokeWidth="1.5"
             strokeDasharray="4 4"
             className="animate-pulse"
+            style={{ stroke: "var(--ns-color-accent)", strokeOpacity: 0.5 }}
           />
           <path
             d="M50 120 C 95 140, 135 135, 155 115"
             fill="none"
-            stroke="rgba(167,139,250,0.7)"
             strokeWidth="1.5"
             strokeDasharray="4 4"
             className="animate-pulse"
+            style={{ stroke: "var(--ns-color-accent-2)", strokeOpacity: 0.7 }}
           />
           <circle
             cx="145"
             cy="70"
             r="4"
             className="animate-pulse"
-            fill="#38bdf8"
+            style={{ fill: "var(--ns-color-accent)" }}
           />
           <circle
             cx="70"
             cy="80"
             r="4"
             className="animate-pulse"
-            fill="#a855f7"
+            style={{ fill: "var(--ns-color-accent-2)" }}
           />
           <circle
             cx="90"
             cy="135"
             r="4"
             className="animate-pulse"
-            fill="#22c55e"
+            style={{ fill: "var(--ns-color-accent-3)" }}
           />
         </svg>
         <div className="flex flex-wrap items-center justify-center gap-2 text-xs">
